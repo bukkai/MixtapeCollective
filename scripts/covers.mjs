@@ -2,10 +2,11 @@
 //
 //   npm run covers                      every playlist with `tape` and `label` set
 //   npm run covers -- emotive-math-rock just these
-//   npm run covers -- emotive-math-rock --label "emomath" --tape worn-black --font salt --out /tmp/try
+//   npm run covers -- emotive-math-rock --label "emomath" --tape scuffed-black --font salt --out /tmp/try
 //
 // Writes covers/<slug>.jpg (1000x1000, Deezer and Spotify) and covers/youtube/<slug>.jpg (1280x720).
-// Blank tapes and where their label sits live in covers/blanks/blanks.json.
+// Blank tapes and the corners of their label (top-left, top-right, bottom-right, bottom-left)
+// live in covers/blanks/blanks.json.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -48,7 +49,7 @@ function jitter(slug) {
   let h = 7;
   for (const c of slug) h = (h * 31 + c.charCodeAt(0)) | 0;
   const r = (n) => ((Math.abs(h >> n) % 1000) / 1000) * 2 - 1;
-  return { angle: r(0) * 1.5, dx: r(4) * 10, dy: r(8) * 6 };
+  return { angle: r(0) * 0.5, dx: r(4) * 10, dy: r(8) * 6 };
 }
 
 // opentype's own toPathData() packs numbers so tightly that librsvg sometimes gives up halfway
@@ -63,6 +64,24 @@ function pathData(p) {
       return `${c.type} ${n(c.x)} ${n(c.y)}`;
     })
     .join(' ');
+}
+
+// Text runs along the label's top and bottom edges and fills most of the band between them.
+// The side edges only set the width: torn or slanted ends shouldn't skew the lettering.
+function labelBox([tl, tr, br, bl]) {
+  const angleOf = (a, b) => Math.atan2(b[1] - a[1], b[0] - a[0]);
+  const angle = (angleOf(tl, tr) + angleOf(bl, br)) / 2;
+  const length = (Math.hypot(tr[0] - tl[0], tr[1] - tl[1]) + Math.hypot(br[0] - bl[0], br[1] - bl[1])) / 2;
+  // distance from the top edge to the bottom edge's midpoint
+  const mid = [(bl[0] + br[0]) / 2, (bl[1] + br[1]) / 2];
+  const band = Math.abs((mid[0] - tl[0]) * Math.sin(angle) - (mid[1] - tl[1]) * Math.cos(angle));
+  return {
+    x: (tl[0] + tr[0] + br[0] + bl[0]) / 4,
+    y: (tl[1] + tr[1] + br[1] + bl[1]) / 4,
+    width: length * 0.82,
+    height: band * 0.68,
+    angle: (angle * 180) / Math.PI,
+  };
 }
 
 function labelSvg(text, fontName, box, slug) {
@@ -120,7 +139,7 @@ async function build(slug, data) {
 
   const labelled = await sharp(path.join(blanksDir, tape.file))
     .resize(SIZE, SIZE)
-    .composite([{ input: Buffer.from(labelSvg(text, opts.font ?? data.font ?? tape.font, tape.label, slug)), blend: 'multiply' }])
+    .composite([{ input: Buffer.from(labelSvg(text, opts.font ?? data.font ?? tape.font, labelBox(tape.corners), slug)), blend: 'multiply' }])
     .toBuffer();
 
   const framed = await sharp(labelled)
