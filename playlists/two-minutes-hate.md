@@ -12,6 +12,8 @@ artists:
   - "Discharge"
 description: "80s hardcore, nothing much over two minutes. DC, LA, NYC and the UK, from Black Flag to Siege. 30 tracks, 47 minutes, no time to get bored."
 smartlink: https://sdz.sh/LuZUih
+tape: scuffed-black
+label: 80s punk
 ---
 
 ## Rework (Nov 2026)
