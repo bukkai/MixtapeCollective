@@ -14,9 +14,6 @@ description: "Fuck authority, fuck ICE, fuck whatever the hell is going on in th
 smartlink: https://sdz.sh/WFudnj
 ---
 
-MDC's "Born to Die" is in here twice on purpose: the original Millions of Dead
-Cops version and the "no Trump No Kkk" re-recording. Not a duplicate to fix.
-
 ## Sequencing (Nov 2026 rework)
 
 Goal: stay angry. The old order went RATM straight into melodic punk. Now it opens with metal and industrial, gets to punk via crust and d-beat, and stays furious all the way. Current order lives in `tracklists/rage-against-authority.csv`.
@@ -32,4 +29,4 @@ Goal: stay angry. The old order went RATM straight into melodic punk. Now it ope
 - Police Truck - Dead Kennedys: already on Punk Rock for Skaters
 - Out Of Step - Minor Threat: already on Punk Rock for Skaters
 - Institutionalized - Suicidal Tendencies: already on Punk Rock for Skaters
-- Born to Die (no Trump No Kkk) - MDC: second version of the same song, kept the original
+- Born to Die (no Trump No Kkk) - MDC: used to be in on purpose next to the original, cut in the Nov 2026 rework to keep one version
