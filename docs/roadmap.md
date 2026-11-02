@@ -4,7 +4,7 @@ Working list of bigger changes. Tick things off as they land.
 
 ## Now
 
-- [ ] **Rage Against Authority: keep it angry.** Opens strong with RATM but slides into punk too early. Move Otep and Ministry up, cut the milder punk (Banned in D.C. and friends).
+- [x] **Rage Against Authority: keep it angry.** Opens strong with RATM but slides into punk too early. Move Otep and Ministry up, cut the milder punk (Banned in D.C. and friends).
 
 ## Next
 
