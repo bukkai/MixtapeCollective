@@ -1,9 +1,4 @@
 {
-  "worn-black": {
-    "file": "worn-black.png",
-    "label": { "x": 485, "y": 288, "width": 600, "height": 120, "angle": -10.5 },
-    "font": "marker"
-  },
   "scuffed-black": {
     "file": "scuffed-black.jpg",
     "label": { "x": 482, "y": 318, "width": 640, "height": 100, "angle": -9.5 },

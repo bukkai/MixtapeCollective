@@ -20,11 +20,12 @@ const blanksDir = path.join(root, 'covers/blanks');
 const blanks = JSON.parse(fs.readFileSync(path.join(blanksDir, 'blanks.json'), 'utf8'));
 
 const fontFile = (pkg) => path.join(root, `node_modules/@fontsource/${pkg}/files/${pkg}-latin-400-normal.woff`);
+// stroke thickens a font that only comes in a thin weight, as a fraction of the font size
 const fonts = {
-  marker: fontFile('permanent-marker'),
-  salt: fontFile('rock-salt'),
-  brush: fontFile('caveat-brush'),
-  typewriter: fontFile('special-elite'),
+  marker: { file: fontFile('permanent-marker'), stroke: 0 },
+  salt: { file: fontFile('rock-salt'), stroke: 0.045 },
+  brush: { file: fontFile('caveat-brush'), stroke: 0 },
+  typewriter: { file: fontFile('special-elite'), stroke: 0 },
 };
 
 const SIZE = 1000;
@@ -65,7 +66,8 @@ function pathData(p) {
 }
 
 function labelSvg(text, fontName, box, slug) {
-  const font = opentype.parse(fs.readFileSync(fonts[fontName] ?? fonts.marker).buffer);
+  const { file, stroke } = fonts[fontName] ?? fonts.marker;
+  const font = opentype.parse(fs.readFileSync(file).buffer);
   const probe = font.getPath(text, 0, 0, 100).getBoundingBox();
   const size = 100 * Math.min(box.width / (probe.x2 - probe.x1), box.height / (probe.y2 - probe.y1));
   const glyphs = font.getPath(text, 0, 0, size);
@@ -86,7 +88,7 @@ function labelSvg(text, fontName, box, slug) {
       <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.7" result="dry"/>
       <feComposite in="shaky" in2="dry" operator="in"/>
     </filter>
-    <g filter="url(#ink)"><path d="${pathData(glyphs)}" transform="${transform}" fill="${INK}" fill-opacity="0.9"/></g>
+    <g filter="url(#ink)"><path d="${pathData(glyphs)}" transform="${transform}" fill="${INK}" fill-opacity="0.9" stroke="${INK}" stroke-opacity="0.9" stroke-width="${stroke * size}" stroke-linejoin="round"/></g>
   </svg>`;
 }
 
