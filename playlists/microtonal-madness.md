@@ -8,10 +8,10 @@ artists:
   - "King Gizzard"
   - "Angine de Poitrine"
   - "Frankie and the Witch Fingers"
-description: ""
+description: "Notes between the notes. A hypnotic psych rock journey built around microtonal tuning systems. King Gizzard, Angine de Poitrine, Mdou Moctar and more."
 links:
   smartlink: https://sdz.sh/fDYx9P
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

@@ -8,10 +8,10 @@ artists:
   - "Ott"
   - "Desert Dwellers"
   - "Globular"
-description: ""
+description: "Essential psychill and psybient. Immersive downtempo psychedelia, ritual rhythms and deep listening. Featuring Shpongle, Ott, Desert Dwellers and more."
 links:
   smartlink: https://sdz.sh/k69Ri2
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

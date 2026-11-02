@@ -10,10 +10,10 @@ artists:
   - "Lanark Artefax"
   - "Nelson Crumble"
   - "Access to Arasaka"
-description: ""
+description: "Cinematic and atmospheric dark ambient drift. Starts with Blade Runner, ends somewhere darker. Even electric sheep need sleep."
 links:
   smartlink: https://sdz.sh/Boy3V2
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

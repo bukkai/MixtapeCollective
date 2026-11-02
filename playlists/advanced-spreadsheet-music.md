@@ -10,10 +10,10 @@ artists:
   - "Mouse on the Keys"
   - "Jizue"
   - "Paranoid Void"
-description: ""
+description: "Piano jazz math"
 links:
-  smartlink: 
-  deezer: 
+  smartlink:
+  deezer:
   spotify:
   youtube_music:
 ---

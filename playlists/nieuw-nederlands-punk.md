@@ -10,10 +10,10 @@ artists:
   - "Ploegendienst"
   - "Crustenunie"
   - "Wasted Youth Club"
-description: ""
+description: "Keiharde punk tracks from the Netherlands, from the last decade or so. Political hardcore, garage chaos, post-punk edges. Geen compassie godverdomme."
 links:
   smartlink: https://sdz.sh/LWMxKe
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

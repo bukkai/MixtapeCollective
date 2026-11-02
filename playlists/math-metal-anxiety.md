@@ -8,10 +8,11 @@ artists:
   - "Meshuggah"
   - "The Dillinger Escape Plan"
   - "Car Bomb"
-description: ""
+  - "SikTh"
+description: "Essential math-leaning metal: polyrhythms, mechanical tension, and riffs that refuse to resolve. Built for counting, miscounting, and spiraling focus."
 links:
   smartlink: https://sdz.sh/ANNtXS
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

@@ -12,7 +12,7 @@ artists:
   - "Unknown Mortal Orchestra"
   - "Mysterons"
   - "King Gizzard"
-description: ""
+description: "Hazy psych, lazy grooves, wobbly tape. Made for late afternoons and long drives where nobody’s in a hurry."
 links:
   smartlink:
   deezer:

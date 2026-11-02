@@ -10,10 +10,10 @@ artists:
   - "Soundgarden"
   - "Alice in Chains"
   - "Stone Temple Pilots"
-description: ""
+description: "A crash course in 90s grunge: the all time anthems and deep cuts. Heavy fuzz, raw voices, big feelings."
 links:
   smartlink: https://sdz.sh/XGJctw
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

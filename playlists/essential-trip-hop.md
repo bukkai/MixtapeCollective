@@ -9,10 +9,10 @@ artists:
   - "Tricky"
   - "Massive Attack"
   - "Portishead"
-description: ""
+description: "Trip-hop from the source. Downtempo soul, sample worship, and smoke-filled rooms. Morcheeba, Tricky, Portishead and many more."
 links:
   smartlink: https://sdz.sh/MyotVF
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

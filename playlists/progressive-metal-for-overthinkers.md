@@ -8,10 +8,11 @@ artists:
   - "Opeth"
   - "Haken"
   - "Mastodon"
-description: ""
+  - "Dream Theater"
+description: "Essential prog metal for restless minds. Long builds, emotional weight, and riffs that reward close listening. Heavy without chaos, complex without noise."
 links:
   smartlink: https://sdz.sh/e4KxNb
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

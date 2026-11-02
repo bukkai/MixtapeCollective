@@ -13,10 +13,10 @@ artists:
   - "Totorro"
   - "Clever Girl"
   - "Parachute Day"
-description: ""
+description: "A focused math rock playlist leaning into the emo/bubbly side of the genre. Clean guitars, odd rhythms, soft feelings. Less flex, more heart."
 links:
   smartlink: https://sdz.sh/7wA4z7
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

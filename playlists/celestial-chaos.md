@@ -12,9 +12,9 @@ artists:
   - "Shub-Niggurath"
   - "Ruins"
   - "Vojdi"
-description: ""
+description: "Kobaïan choirs, marching bass and chamber rock from the dark side. Best of Zeuhl and RIO through the ages, from Magma and Koenjihyakkei to newer gems."
 links:
-  smartlink: 
+  smartlink:
   deezer: https://www.deezer.com/us/playlist/15137451263
   spotify:
   youtube_music:

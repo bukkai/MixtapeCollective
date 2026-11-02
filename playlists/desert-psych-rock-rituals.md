@@ -9,10 +9,10 @@ artists:
   - "Colour Haze"
   - "Earthless"
   - "Queens of the Stone Age"
-description: ""
+description: "Essential tracks from desert psych rock. Hypnotic riffs, sun-bleached grooves, and stoner-leaning jams from scene pioneers and modern torchbearers."
 links:
   smartlink: https://sdz.sh/jeCX38
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

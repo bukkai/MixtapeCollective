@@ -10,10 +10,10 @@ artists:
   - "Gumnut"
   - "Ott"
   - "Desert Dwellers"
-description: ""
+description: "Psychedelic music with a pulse. Deep dub bass, hypnotic grooves and a rhythmic backbone that pulls you under."
 links:
   smartlink: https://soundiiz.com/webapp/smartlink/182406
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

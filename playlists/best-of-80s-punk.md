@@ -9,10 +9,10 @@ artists:
   - "Black Flag"
   - "Minor Threat"
   - "Bad Brains"
-description: ""
+description: "Essential tracks from the 80s punk scene. Raw energy, underground icons, and modern bands keeping the vibe alive."
 links:
   smartlink: https://sdz.sh/LuZUih
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---

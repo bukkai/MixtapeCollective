@@ -9,10 +9,10 @@ artists:
   - "Pixies"
   - "Pavement"
   - "Dinosaur Jr."
-description: ""
+description: "Late-night college radio that cared about sequencing. Blown-out amps, weird tunings, the good kind of abrasive."
 links:
   smartlink: https://sdz.sh/z5jqfR
-  deezer: 
+  deezer:
   spotify:
   youtube_music:
 ---
