@@ -27,7 +27,18 @@ The website uses approximate hex values from `src/data/palette.ts`. A playlist's
 
 ## Full Deezer set
 
-37 colors, listed row by row as they appear in the Deezer cover editor (February 2026).
+37 colors, listed row by row as they appear in the Deezer cover editor (February 2026). Hex values sampled from the editor (November 2026); the cover script uses them for the border via `deezer` in `palette.ts`.
+
+```
+#7d3a81 #ab50b2 #de68e7 #fbc6ff #fddeff
+#531e83 #7628ba #a237ff #d9affe #e9ccff
+#1f2c99 #2d3ed9 #5262fc #b4bbfe #d0d5fe
+#135e6e #32808f #7bcec9 #96f9f3 #defdfb
+#5d5621 #a39a3a #fcff5f #fdffb8 #ffffeb
+#8f3a22 #c54f2f #ff673d #ffcbbd #ffe2d9
+#711b1b #a02626 #da3434 #ffa9a8 #ffcaca
+#000000 #ffffff
+```
 
 1. **Pinks / purples:** dark purple, medium purple, hot pink, light pink, very light pink (outline only)
 2. **Purples:** deep indigo, medium indigo, mid purple, soft lavender, pale lavender
