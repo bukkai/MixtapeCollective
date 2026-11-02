@@ -30,6 +30,12 @@ const sections = [
 ].filter((s) => s.items.length);
 
 const usedColors = colorKeys.filter((k) => published.some((p) => p.data.color === k));
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const description = 'Playlists made like mixtapes. Sequenced to be played front to back.';
+// Social previews need absolute URLs; Astro.site is set by the deploy workflow
+const pageUrl = Astro.site ? new URL(`${base}/`, Astro.site).href : undefined;
+const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${base}/og.png`;
 ---
 
 <!doctype html>
@@ -38,12 +44,21 @@ const usedColors = colorKeys.filter((k) => published.some((p) => p.data.color ==
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mixtape Collective</title>
-    <meta
-      name="description"
-      content="Playlists made like mixtapes. Sequenced to be played front to back."
-    />
+    <meta name="description" content={description} />
     <meta name="color-scheme" content="light" />
-    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} type="image/svg+xml" />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    {pageUrl && <link rel="canonical" href={pageUrl} />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mixtape Collective" />
+    <meta property="og:title" content="Mixtape Collective" />
+    <meta property="og:description" content={description} />
+    {pageUrl && <meta property="og:url" content={pageUrl} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A cassette labeled Mixtape Collective in handwriting" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
     <header>
