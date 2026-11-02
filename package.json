@@ -1,0 +1,16 @@
+{
+  "name": "mixtape-collective",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/permanent-marker": "^5.3.0",
+    "astro": "^7.4.5"
+  }
+}

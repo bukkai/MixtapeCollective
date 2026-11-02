@@ -1,0 +1,198 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { palette } from '../data/palette';
+
+interface Props {
+  playlist: CollectionEntry<'playlists'>;
+}
+
+const { playlist } = Astro.props;
+const { title, genres, artists, color, links, description } = playlist.data;
+const swatch = palette[color];
+
+// Small, stable tilt per tape so the shelf looks hand-stacked
+const hash = [...playlist.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7);
+const tilt = ((Math.abs(hash) % 31) - 15) / 10; // -1.5deg .. 1.5deg
+
+const platformLinks = [
+  { key: 'smartlink', label: 'All platforms' },
+  { key: 'deezer', label: 'Deezer' },
+  { key: 'spotify', label: 'Spotify' },
+  { key: 'youtube_music', label: 'YouTube Music' },
+]
+  .map((p) => ({ ...p, href: links[p.key as keyof typeof links] }))
+  .filter((p) => p.href);
+---
+
+<article
+  class="tape"
+  style={`--tilt:${tilt}deg; --band:${swatch.hex}; --band-ink:${swatch.ink === 'light' ? '#f4efe2' : '#1d1b18'}`}
+>
+  <div class="shell">
+    <div class="label">
+      <div class="band"><span>{genres}</span></div>
+      <h3>{title}</h3>
+      <div class="window" aria-hidden="true">
+        <span class="reel"></span>
+        <span class="tape-run"></span>
+        <span class="reel"></span>
+      </div>
+    </div>
+    <div class="screws" aria-hidden="true"><i></i><i></i></div>
+  </div>
+
+  <div class="card">
+    {description && <p class="desc">{description}</p>}
+    {artists.length > 0 && (
+      <p class="artists">{artists.join(' · ')}</p>
+    )}
+    {platformLinks.length > 0 && (
+      <ul class="links">
+        {platformLinks.map((p) => (
+          <li>
+            <a href={p.href} rel="noopener" target="_blank">{p.label}</a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</article>
+
+<style>
+  .tape {
+    transform: rotate(var(--tilt));
+    transition: transform 0.25s ease;
+  }
+  .tape:hover,
+  .tape:focus-within {
+    transform: rotate(0deg) translateY(-3px);
+  }
+
+  .shell {
+    position: relative;
+    background: #24221f;
+    border-radius: 10px;
+    padding: 12px 12px 26px;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 10px 22px -12px rgba(20, 16, 10, 0.55);
+  }
+
+  .label {
+    background: var(--label);
+    border-radius: 4px;
+    padding: 0 12px 12px;
+    background-image: var(--grain);
+  }
+
+  .band {
+    margin: 0 -12px;
+    padding: 5px 12px;
+    background: var(--band);
+    color: var(--band-ink);
+    border-radius: 4px 4px 0 0;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h3 {
+    font-family: var(--marker);
+    font-weight: 400;
+    font-size: 1.35rem;
+    line-height: 1.15;
+    margin: 10px 0 10px;
+    color: #1d1b18;
+    min-height: 2.3em;
+    display: flex;
+    align-items: center;
+  }
+
+  .window {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: #2f2c28;
+    border-radius: 999px;
+    padding: 6px 14px;
+    margin: 0 auto;
+    max-width: 78%;
+  }
+  .reel {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, #2f2c28 0 5px, transparent 6px),
+      repeating-conic-gradient(#d9d1bd 0 20deg, #bdb39b 20deg 60deg);
+    flex: none;
+  }
+  .tape-run {
+    flex: 1;
+    height: 16px;
+    background: linear-gradient(#4a3a2a, #3a2c1f);
+    border-radius: 3px;
+  }
+
+  .screws {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+  .screws i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #46423c;
+  }
+
+  .card {
+    padding: 12px 4px 0;
+  }
+  .desc {
+    margin: 0 0 8px;
+    font-size: 0.85rem;
+  }
+  .artists {
+    margin: 0 0 10px;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .links a {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 4px 9px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .links li:first-child a {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  .links a:hover,
+  .links a:focus-visible {
+    background: var(--band);
+    color: var(--band-ink);
+    border-color: var(--band);
+  }
+</style>

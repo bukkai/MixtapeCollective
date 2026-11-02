@@ -1,0 +1,223 @@
+---
+import '@fontsource/permanent-marker';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import { getCollection } from 'astro:content';
+import Cassette from '../components/Cassette.astro';
+import { palette, colorKeys } from '../data/palette';
+
+const all = await getCollection('playlists');
+const published = all.filter((p) => p.data.status === 'published');
+
+// Shelve tapes by color, then alphabetically
+const byShelf = (a: (typeof all)[number], b: (typeof all)[number]) =>
+  colorKeys.indexOf(a.data.color) - colorKeys.indexOf(b.data.color) ||
+  a.data.title.localeCompare(b.data.title);
+
+const sections = [
+  {
+    id: 'collections',
+    title: 'Collections',
+    blurb: 'Built around a sound or a mood. Each one has a start, a middle and an end.',
+    items: published.filter((p) => p.data.type === 'collection').sort(byShelf),
+  },
+  {
+    id: 'eras',
+    title: 'Era retrospectives',
+    blurb: 'The decades, trimmed down to what actually holds up.',
+    items: published.filter((p) => p.data.type === 'era-retrospective').sort(byShelf),
+  },
+].filter((s) => s.items.length);
+
+const usedColors = colorKeys.filter((k) => published.some((p) => p.data.color === k));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mixtape Collective</title>
+    <meta
+      name="description"
+      content="Playlists made like mixtapes. Sequenced to be played front to back."
+    />
+    <meta name="color-scheme" content="light" />
+    <link rel="icon" href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <header>
+      <p class="masthead"><span>Mixtape Collective</span></p>
+      <p class="lede">
+        Playlists made like mixtapes. Sequenced to be played front to back, so maybe leave
+        shuffle off for this one.
+      </p>
+      <p class="count">{published.length} tapes on the shelf</p>
+      <ul class="legend" aria-label="Color key">
+        {usedColors.map((k) => (
+          <li>
+            <span class="dot" style={`background:${palette[k].hex}`}></span>
+            {palette[k].use}
+          </li>
+        ))}
+      </ul>
+    </header>
+
+    <main>
+      {sections.map((s) => (
+        <section id={s.id}>
+          <h2>{s.title}</h2>
+          <p class="blurb">{s.blurb}</p>
+          <div class="shelf">
+            {s.items.map((p) => (
+              <Cassette playlist={p} />
+            ))}
+          </div>
+        </section>
+      ))}
+    </main>
+
+    <footer>
+      <p>Curated on Deezer, shared everywhere else.</p>
+      <ul>
+        <li><a href="https://www.deezer.com/profile/6714836221" rel="noopener">Deezer</a></li>
+        <li><a href="https://www.reddit.com/user/MixtapeCollective" rel="noopener">Reddit</a></li>
+        <li><a href="https://bsky.app/profile/mixtapecollective.bsky.social" rel="noopener">Bluesky</a></li>
+      </ul>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #ece5d3;
+    --label: #f3eddd;
+    --ink: #1d1b18;
+    --muted: #5d574c;
+    --marker: 'Permanent Marker', 'Comic Sans MS', cursive;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body {
+    margin: 0;
+    font-family: var(--mono);
+    color: var(--ink);
+    background: var(--paper) var(--grain);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 2px; }
+</style>
+
+<style>
+  header,
+  main,
+  footer {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  header {
+    padding-top: 56px;
+    padding-bottom: 24px;
+  }
+  .masthead {
+    margin: 0 0 18px;
+  }
+  .masthead span {
+    display: inline-block;
+    font-family: var(--marker);
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    line-height: 1;
+    padding: 14px 22px 10px;
+    background: var(--label) var(--grain);
+    transform: rotate(-1.6deg);
+    box-shadow: 0 8px 18px -12px rgba(20, 16, 10, 0.6);
+    position: relative;
+  }
+  .masthead span::before {
+    /* masking tape */
+    content: '';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    width: 90px;
+    height: 24px;
+    margin-left: -45px;
+    background: rgba(226, 214, 176, 0.75);
+    transform: rotate(3deg);
+  }
+  .lede {
+    max-width: 52ch;
+    font-size: 1.05rem;
+    margin: 0 0 6px;
+  }
+  .count {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .legend {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    flex: none;
+  }
+
+  section {
+    padding: 28px 0 12px;
+    border-top: 2px dashed rgba(29, 27, 24, 0.25);
+    margin-top: 20px;
+  }
+  h2 {
+    font-family: var(--marker);
+    font-weight: 400;
+    font-size: 1.9rem;
+    margin: 0;
+  }
+  .blurb {
+    margin: 2px 0 26px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .shelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 40px 28px;
+  }
+
+  footer {
+    padding-top: 40px;
+    padding-bottom: 56px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  footer p { margin: 0 0 8px; }
+  footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 18px;
+  }
+</style>
