@@ -10,5 +10,5 @@ artists:
   - "Don Caballero"
   - "You Slut!"
 description: "Not the pretty kind. This is math rock with rough edges and bad intentions. Don Caballero, Hella, You Slut!, Battles, and friends making uncomfortable music"
-smartlink: https://soundiiz.com/webapp/smartlink/188538
+smartlink: https://sdz.sh/YxzQxj
 ---

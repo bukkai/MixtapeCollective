@@ -11,5 +11,5 @@ artists:
   - "Ott"
   - "Desert Dwellers"
 description: "Psychedelic music with a pulse. Deep dub bass, hypnotic grooves and a rhythmic backbone that pulls you under."
-smartlink: https://soundiiz.com/webapp/smartlink/182406
+smartlink: https://sdz.sh/fStTf9
 ---
