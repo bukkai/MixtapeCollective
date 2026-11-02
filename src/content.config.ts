@@ -20,6 +20,10 @@ const playlists = defineCollection({
     // Soundiiz smartlink, already covers every platform
     smartlink: url,
     cover: z.string().optional(),
+    // Cover generator (npm run covers): blank from covers/blanks/blanks.json, text for the label
+    tape: z.string().optional(),
+    label: z.string().optional(),
+    font: z.enum(['marker', 'salt', 'brush', 'typewriter']).optional(),
     published: z.coerce.date().optional(),
   }),
 });
