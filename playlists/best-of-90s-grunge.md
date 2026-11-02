@@ -11,9 +11,5 @@ artists:
   - "Alice in Chains"
   - "Stone Temple Pilots"
 description: "A crash course in 90s grunge: the all time anthems and deep cuts. Heavy fuzz, raw voices, big feelings."
-links:
-  smartlink: https://sdz.sh/XGJctw
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/XGJctw
 ---

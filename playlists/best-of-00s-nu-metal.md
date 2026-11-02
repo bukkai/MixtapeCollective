@@ -11,9 +11,5 @@ artists:
   - "Deftones"
   - "System of a Down"
 description: "A tight selection of 00s nu metal classics and scene staples. Play tested for heavy riffs, groove-first energy and pure catharsis. Oh, and a bit of nostalgia."
-links:
-  smartlink: https://sdz.sh/HgQVUu
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/HgQVUu
 ---

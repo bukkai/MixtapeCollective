@@ -11,9 +11,5 @@ artists:
   - "Turbonegro"
   - "Lightning Bolt"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

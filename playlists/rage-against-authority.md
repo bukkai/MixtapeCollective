@@ -11,11 +11,7 @@ artists:
   - "Refused"
   - "Suicidal Tendencies"
 description: "Fuck authority, fuck ICE, fuck whatever the hell is going on in the world right now. This is a playlist for the angry. Rise up!"
-links:
-  smartlink: https://sdz.sh/WFudnj
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/WFudnj
 ---
 
 MDC's "Born to Die" is in here twice on purpose: the original Millions of Dead

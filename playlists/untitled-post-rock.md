@@ -11,9 +11,5 @@ artists:
   - "Russian Circles"
   - "Caspian"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

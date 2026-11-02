@@ -14,9 +14,5 @@ artists:
   - "KMFDM"
   - "Front 242"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

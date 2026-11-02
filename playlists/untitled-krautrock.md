@@ -12,9 +12,5 @@ artists:
   - "Harmonia"
   - "Amon Düül II"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

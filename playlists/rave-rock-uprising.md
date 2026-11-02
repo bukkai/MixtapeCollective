@@ -12,9 +12,5 @@ artists:
   - "Death in Vegas"
   - "Propellerheads"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

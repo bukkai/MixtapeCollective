@@ -11,9 +11,5 @@ artists:
   - "Jizue"
   - "Paranoid Void"
 description: "Piano jazz math"
-links:
-  smartlink:
-  deezer:
-  spotify:
-  youtube_music:
+smartlink:
 ---

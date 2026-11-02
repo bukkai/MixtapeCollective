@@ -17,14 +17,8 @@ const playlists = defineCollection({
     artists: z.array(z.string()).default([]),
     // Deezer truncates at 160 characters without warning
     description: z.string().max(160).optional(),
-    links: z
-      .object({
-        smartlink: url,
-        deezer: url,
-        spotify: url,
-        youtube_music: url,
-      })
-      .default({}),
+    // Soundiiz smartlink, already covers every platform
+    smartlink: url,
     cover: z.string().optional(),
     published: z.coerce.date().optional(),
   }),

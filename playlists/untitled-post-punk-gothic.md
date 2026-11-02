@@ -11,9 +11,5 @@ artists:
   - "Joy Division"
   - "Siouxsie and the Banshees"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

@@ -10,9 +10,5 @@ artists:
   - "Garbage"
   - "Massive Attack"
 description: "A hand picked collection of great 90s alt rock bangers. Defining hits and deep cuts, from raw anthems to late-night comedowns."
-links:
-  smartlink: https://sdz.sh/fu3eXk
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/fu3eXk
 ---

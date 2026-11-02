@@ -10,9 +10,5 @@ artists:
   - "Earthless"
   - "Queens of the Stone Age"
 description: "Essential tracks from desert psych rock. Hypnotic riffs, sun-bleached grooves, and stoner-leaning jams from scene pioneers and modern torchbearers."
-links:
-  smartlink: https://sdz.sh/jeCX38
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/jeCX38
 ---

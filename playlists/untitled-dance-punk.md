@@ -14,9 +14,5 @@ artists:
   - "The Faint"
   - "Ladytron"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

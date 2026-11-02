@@ -10,9 +10,5 @@ artists:
   - "Entombed"
   - "Cannibal Corpse"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

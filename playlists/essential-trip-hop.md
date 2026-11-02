@@ -10,9 +10,5 @@ artists:
   - "Massive Attack"
   - "Portishead"
 description: "Trip-hop from the source. Downtempo soul, sample worship, and smoke-filled rooms. Morcheeba, Tricky, Portishead and many more."
-links:
-  smartlink: https://sdz.sh/MyotVF
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/MyotVF
 ---

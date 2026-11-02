@@ -10,9 +10,5 @@ artists:
   - "Mastodon"
   - "Dream Theater"
 description: "Essential prog metal for restless minds. Long builds, emotional weight, and riffs that reward close listening. Heavy without chaos, complex without noise."
-links:
-  smartlink: https://sdz.sh/e4KxNb
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/e4KxNb
 ---

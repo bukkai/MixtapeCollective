@@ -13,11 +13,7 @@ artists:
   - "Mysterons"
   - "King Gizzard"
 description: "Hazy psych, lazy grooves, wobbly tape. Made for late afternoons and long drives where nobody’s in a hurry."
-links:
-  smartlink:
-  deezer:
-  spotify:
-  youtube_music:
+smartlink:
 ---
 
 Working name was Neo-Psych Drift. Slow, hazy, dreamlike. Distinct from Desert Psych

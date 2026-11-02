@@ -12,9 +12,5 @@ artists:
   - "Melvins"
   - "Dinosaur Jr."
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

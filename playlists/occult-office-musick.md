@@ -12,9 +12,5 @@ artists:
   - "Nurse With Wound"
   - "Dead Can Dance"
 description: "Dark ambient, ritual electronics and occult drift. A post industrial playlist inspired by Coil's Musick to play in the Dark."
-links:
-  smartlink: https://sdz.sh/DHDnLH
-  deezer:
-  spotify:
-  youtube_music:
+smartlink: https://sdz.sh/DHDnLH
 ---

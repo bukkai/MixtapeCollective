@@ -11,9 +11,5 @@ artists:
   - "Heavens to Betsy"
   - "Huggy Bear"
 description: ""
-links:
-  smartlink: 
-  deezer: 
-  spotify:
-  youtube_music:
+smartlink:
 ---

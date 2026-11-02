@@ -7,21 +7,12 @@ interface Props {
 }
 
 const { playlist } = Astro.props;
-const { title, genres, artists, color, links, description } = playlist.data;
+const { title, genres, artists, color, smartlink, description } = playlist.data;
 const swatch = palette[color];
 
 // Small, stable tilt per tape so the shelf looks hand-stacked
 const hash = [...playlist.id].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 7);
 const tilt = ((Math.abs(hash) % 31) - 15) / 10; // -1.5deg .. 1.5deg
-
-const platformLinks = [
-  { key: 'smartlink', label: 'All platforms' },
-  { key: 'deezer', label: 'Deezer' },
-  { key: 'spotify', label: 'Spotify' },
-  { key: 'youtube_music', label: 'YouTube Music' },
-]
-  .map((p) => ({ ...p, href: links[p.key as keyof typeof links] }))
-  .filter((p) => p.href);
 ---
 
 <article
@@ -46,14 +37,8 @@ const platformLinks = [
     {artists.length > 0 && (
       <p class="artists">{artists.join(' · ')}</p>
     )}
-    {platformLinks.length > 0 && (
-      <ul class="links">
-        {platformLinks.map((p) => (
-          <li>
-            <a href={p.href} rel="noopener" target="_blank">{p.label}</a>
-          </li>
-        ))}
-      </ul>
+    {smartlink && (
+      <a class="listen" href={smartlink} rel="noopener" target="_blank">Listen</a>
     )}
   </div>
 </article>
@@ -167,30 +152,18 @@ const platformLinks = [
     color: var(--muted);
   }
 
-  .links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .links a {
+  .listen {
     display: inline-block;
     font-size: 0.75rem;
     padding: 4px 9px;
-    border: 1.5px solid currentColor;
+    border: 1.5px solid var(--ink);
     border-radius: 3px;
-    color: var(--ink);
-    text-decoration: none;
-  }
-  .links li:first-child a {
     background: var(--ink);
     color: var(--paper);
-    border-color: var(--ink);
+    text-decoration: none;
   }
-  .links a:hover,
-  .links a:focus-visible {
+  .listen:hover,
+  .listen:focus-visible {
     background: var(--band);
     color: var(--band-ink);
     border-color: var(--band);
