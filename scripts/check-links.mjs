@@ -244,15 +244,18 @@ async function checkYoutube(id, out) {
     const { title, videoOwnerChannelTitle: channel, resourceId } = item.snippet;
     const position = item.snippet.position + 1;
     // A deleted video loses its title and channel, so only its position is left to go on
-    const label = channel ? `"${title}" by ${channel.replace(/ - Topic$/, '')}` : `Track ${position} ("${title}")`;
+    const name = channel ? `"${title}" by ${channel.replace(/ - Topic$/, '')}` : `Track ${position} ("${title}")`;
+    const label = `[${name}](https://music.youtube.com/watch?v=${resourceId.videoId})`;
     const v = videos.get(resourceId.videoId);
     if (!v || v.status.privacyStatus === 'private' || !['processed', 'uploaded'].includes(v.status.uploadStatus)) {
-      out.problems.push(`${label} is gone from YouTube (position ${position}, video ${resourceId.videoId})`);
+      out.problems.push(`${label} is gone from YouTube (position ${position})`);
       continue;
     }
     const region = v.contentDetails.regionRestriction ?? {};
     const off = countries.filter((c) => region.blocked?.includes(c) || (region.allowed && !region.allowed.includes(c)));
-    if (off.length) out.problems.push(`${label} blocked on YouTube in ${off.join(', ')}`);
+    // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
+    const how = region.blocked?.length ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
+    if (off.length) out.problems.push(`${label} blocked on YouTube in ${off.join(', ')} (${how})`);
   }
 }
 
