@@ -5,12 +5,12 @@ genres: "Neo-psych / lo-fi psych / jazz-tinged psych"
 color: pale-lavender
 status: published
 artists:
-  - "DOOMGONG"
+  - "DOOM GONG"
   - "Tame Impala"
   - "Mild High Club"
   - "Khruangbin"
   - "Unknown Mortal Orchestra"
-  - "Mysterons"
+  - "The Mysterons"
   - "King Gizzard"
 description: "Hazy psych, lazy grooves, wobbly tape. Made for late afternoons and long drives where nobody’s in a hurry."
 smartlink: https://sdz.sh/auNq9M
