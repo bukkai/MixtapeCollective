@@ -284,7 +284,7 @@ async function check(slug, data) {
   // Soundiiz can't always find a match on every platform, so a gap is worth a look, not an alarm
   const counts = Object.entries(out.counts);
   if (new Set(counts.map(([, n]) => n)).size > 1) {
-    out.minor.push(`Track counts differ: ${counts.map(([p, n]) => `${p} ${n}`).join(', ')}. A sync may have dropped one`);
+    out.minor.push(`Track counts differ: ${counts.map(([p, n]) => `${p} ${n}`).join(', ')}. Soundiiz may not have found a match, or the playlists drifted apart`);
   }
   return out;
 }
