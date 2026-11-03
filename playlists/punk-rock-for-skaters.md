@@ -12,3 +12,7 @@ artists:
 description: "Grip tape & bruises. Punk classics, deep cuts, early influences and new bands keeping it alive. Not a Tony Hawk playlist, but some THPS classics had to be in."
 smartlink: https://sdz.sh/CwgJV4
 ---
+
+## Swaps
+
+- Possessed To Skate - Suicidal Tendencies: the Join The Army original got pulled from Deezer in Nov 2026, swapped for the 2010 re-recording from No Mercy Fool!/The Suicidal Family
