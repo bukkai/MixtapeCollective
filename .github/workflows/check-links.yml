@@ -47,7 +47,7 @@ jobs:
             exit 0
           fi
           # Editing the body sends no notification, so comment when the list of problems changed.
-          # Problems are `-` bullets, re-uploads use `*` and don't count.
+          # Problems are `-` bullets, tracks that probably still play use `*` and don't count.
           gh issue view "$issue" --json body --jq .body | grep '^- ' > before || true
           grep '^- ' report.md > after || true
           gh issue edit "$issue" --body-file report.md

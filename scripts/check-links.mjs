@@ -7,8 +7,9 @@
 //   npm run check:links -- --report report.md   also write the report as Markdown
 //
 // Exits with 1 when something needs attention, so CI can act on it.
-// Dead tracks that came back as the same recording (same ISRC) under a new id don't count:
-// Deezer quietly plays the new copy, so those are listed separately as worth tidying up.
+// Tracks the API calls dead don't count while Deezer probably still plays them: the same
+// recording (same ISRC) is back under a new id, or the album is still in the catalog. Those are
+// listed separately as worth a listen.
 // Deezer's `readable` flag depends on where the request comes from, so tracks are checked
 // against `available_countries` instead. That works the same on a laptop or a US CI runner.
 
@@ -104,27 +105,27 @@ async function replacement(track) {
 
 async function check(slug, data) {
   const problems = [];
-  const reuploads = [];
+  const probablyPlays = [];
   const info = [];
 
-  if (!data.smartlink) return { problems: ['no smartlink in front matter'], reuploads, info };
+  if (!data.smartlink) return { problems: ['no smartlink in front matter'], probablyPlays, info };
 
   let found;
   try {
     found = await smartlinkPlatforms(data.smartlink);
   } catch (e) {
-    return { problems: [`${data.smartlink}: ${e.message}`], reuploads, info };
+    return { problems: [`${data.smartlink}: ${e.message}`], probablyPlays, info };
   }
   const missing = Object.keys(platforms).filter((p) => !found[p]);
   if (missing.length) problems.push(`smartlink doesn't list ${missing.join(', ')}`);
-  if (!found.deezer) return { problems, reuploads, info };
+  if (!found.deezer) return { problems, probablyPlays, info };
 
   let tracks;
   try {
     tracks = await deezerTracks(found.deezer[1]);
   } catch (e) {
     problems.push(e.message);
-    return { problems, reuploads, info };
+    return { problems, probablyPlays, info };
   }
   info.push(`${tracks.length} tracks on Deezer`);
 
@@ -142,14 +143,22 @@ async function check(slug, data) {
     const copy = (swap) => `[${swap.title}, from ${swap.album.title}](${swap.link})`;
     const same = await reupload(t);
     if (same) {
-      reuploads.push(`${label} plays as its re-upload ${copy(same)}`);
+      probablyPlays.push(`${label} plays as its re-upload ${copy(same)}`);
       continue;
     }
     const swap = await replacement(t);
-    problems.push(swap ? `${problem}. Playable copy, check the version: ${copy(swap)}` : problem);
+    const suggestion = swap ? `. Playable copy, check the version: ${copy(swap)}` : '';
+    // The app plays a fallback the public API can't see, so a track it calls dead often still
+    // plays. Only count it while its album is gone from the catalog as well.
+    const album = detail.album && (await deezer(`/album/${detail.album.id}`));
+    if (!detail.error && album && !album.error && album.available !== false) {
+      probablyPlays.push(`${problem} according to the API, but its album is still listed, so it probably plays${suggestion}`);
+      continue;
+    }
+    problems.push(`${problem}, album gone too${suggestion}`);
   }
 
-  return { problems, reuploads, info };
+  return { problems, probablyPlays, info };
 }
 
 const files = fs
@@ -168,13 +177,13 @@ for (const file of files) {
   const mark = result.problems.length ? '✗' : '✓';
   console.log(`${mark} ${data.title}${result.info.length ? ` (${result.info.join(', ')})` : ''}`);
   for (const p of result.problems) console.log(`    ${p}`);
-  for (const p of result.reuploads) console.log(`    (re-upload) ${p}`);
+  for (const p of result.probablyPlays) console.log(`    (probably plays) ${p}`);
 }
 
 const broken = results.filter((r) => r.problems.length);
-const tidy = results.filter((r) => r.reuploads.length);
+const tidy = results.filter((r) => r.probablyPlays.length);
 console.log(
-  `\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention, ${tidy.length} have re-uploads to tidy`,
+  `\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention, ${tidy.length} worth a listen`,
 );
 
 if (opts.report) {
@@ -187,18 +196,18 @@ if (opts.report) {
     for (const p of r.problems) lines.push(`- ${p}`);
     lines.push('');
   }
-  if (!broken.length) lines.push('Everything plays.', '');
+  if (!broken.length) lines.push('Nothing needs fixing.', '');
   // `*` bullets so the workflow's "did the list change" check only looks at real problems
   if (tidy.length) {
     lines.push(
-      '<details><summary>Re-uploads to tidy up when convenient</summary>',
+      '<details><summary>Probably still plays, worth a listen when convenient</summary>',
       '',
-      'These still play because Deezer swaps in the same recording, but the playlist points at a dead id.',
+      "Deezer's API calls these dead, but the app most likely plays them or a copy in their place. If one doesn't play, swap it.",
       '',
     );
     for (const r of tidy) {
       lines.push(`**${r.title}**`, '');
-      for (const p of r.reuploads) lines.push(`* ${p}`);
+      for (const p of r.probablyPlays) lines.push(`* ${p}`);
       lines.push('');
     }
     lines.push('</details>');
