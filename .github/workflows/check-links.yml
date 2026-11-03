@@ -1,0 +1,55 @@
+name: Check playlist links
+
+# Weekly check that smartlinks resolve and every Deezer track still plays in NL.
+# Keeps one open issue up to date while something's broken and closes it once all is well.
+
+on:
+  schedule:
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: check-links
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TITLE: Playlist link check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - id: check
+        run: npm run check:links -- --report report.md
+        continue-on-error: true
+      - name: Report
+        run: |
+          issue=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
+          # A crash leaves no report behind, still worth an issue
+          [ -s report.md ] || echo "The check crashed, see the run log." > report.md
+          printf '\n[Run log](%s)\n' "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> report.md
+          if [ "${{ steps.check.outcome }}" = success ]; then
+            if [ -n "$issue" ]; then gh issue close "$issue" --comment "$(cat report.md)"; fi
+            exit 0
+          fi
+          if [ -z "$issue" ]; then
+            gh issue create --title "$TITLE" --body-file report.md
+            exit 0
+          fi
+          # Editing the body sends no notification, so comment when the list of problems changed
+          gh issue view "$issue" --json body --jq .body | grep '^- ' > before || true
+          grep '^- ' report.md > after || true
+          gh issue edit "$issue" --body-file report.md
+          if ! cmp -s before after; then
+            gh issue comment "$issue" --body "The list changed this week, see the issue description for the current state."
+          fi
