@@ -3,7 +3,7 @@ title: "Neo-Psych Chill"
 type: collection
 genres: "Neo-psych / lo-fi psych / jazz-tinged psych"
 color: pale-lavender
-status: curating
+status: published
 artists:
   - "DOOMGONG"
   - "Tame Impala"
@@ -13,7 +13,7 @@ artists:
   - "Mysterons"
   - "King Gizzard"
 description: "Hazy psych, lazy grooves, wobbly tape. Made for late afternoons and long drives where nobody’s in a hurry."
-smartlink:
+smartlink: https://sdz.sh/auNq9M
 ---
 
 Working name was Neo-Psych Drift. Slow, hazy, dreamlike. Distinct from Desert Psych

@@ -4,7 +4,7 @@ Rough plan for the next five weeks, following the phases in `promotion.md`. Thre
 
 | Playlist | Status | Core subs | Link |
 | --- | --- | --- | --- |
-| Neo-Psych Chill | Published Sun 1 Nov | r/psychedelicrock, r/TameImpala, r/Khruangbin | (not in repo yet) |
+| Neo-Psych Chill | Public, announce Wed 4 Nov | r/psychedelicrock, r/TameImpala, r/Khruangbin | https://sdz.sh/auNq9M |
 | Microtonal Madness | Re-push started Tue 3 Nov | r/kgatlw, r/microtonal (done) | https://sdz.sh/fDYx9P |
 | Advanced Spreadsheet Music | Launch Thu 19 Nov | r/mathrock | (not in repo yet) |
 | Rage Against Authority, Two Minutes Hate | Recently updated | Bumps only | https://sdz.sh/WFudnj, https://sdz.sh/LuZUih |

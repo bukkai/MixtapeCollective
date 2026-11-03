@@ -48,6 +48,7 @@ The posts work because they read like a fan reporting back, not a curator pitchi
 - **Say what makes it different:** the angle, the counterpart, "more ambient and moody than vol. 1".
 - **Soft self-promo in artist subs:** "Hope it's okay to share", "Hope you guys don't mind the self-promo".
 - **Close with an invite:** "Recommendations always welcome", "Let me know what's missing!"
+- **Skip the "full listen" line.** No "intended as a full listen rather than a shuffle" in new posts.
 - **Small casual touches:** "imo", "Have to say", parentheses for asides, link on its own line at the end.
 
 ## Where to post
@@ -128,7 +129,7 @@ If you like [artist] and [what this list adds or drops], there might be a couple
 ### Phase 3: general playlist sub
 
 ```
-I made a [genre] playlist with classics like [A], [B] and [C] to recent bands like [D] that keep the sound going. Lots of great input from r/[core sub]. Intended as a full listen rather than a shuffle. Hope you enjoy!
+I made a [genre] playlist with classics like [A], [B] and [C] to recent bands like [D] that keep the sound going. Lots of great input from r/[core sub]. Hope you enjoy!
 
 [link]
 ```
@@ -171,7 +172,59 @@ New tape: [Playlist name]. [One-line hook.] [Artist A], [Artist B], [Artist C] a
 
 Filled-in posts, ready to go. Move a post to the log once it's up. Write these during bursts so quiet months are copy and paste.
 
-### Microtonal Madness: phase 2, r/xenharmonic (check)
+### Wed 4 Nov. Neo-Psych Chill: phase 1, r/psychedelicrock
+
+Final version, as written by Stephan.
+
+```
+I made a hazy neo-psych playlist
+
+I'd been a fan of Tame Impala ever since the InnerSpeaker days, but I really rediscovered psych rock with King Gizzard and Mild High Club a few years ago. I spent some time finding similar stuff to put in a playlist, so I hope it's alright to share it here.
+
+It's got Tame Impala, Khruangbin, Unknown Mortal Orchestra, a bit of mellow era King Gizzard, but also lesser known stuff like DOOM GONG and The Mysterons.
+
+Recommendations welcome!
+
+https://sdz.sh/auNq9M
+```
+
+### Wed 4 Nov. Neo-Psych Chill: Bluesky launch
+
+Add the cassette cover.
+
+```
+New tape: Neo-Psych Chill. Hazy psych, lazy grooves, wobbly tape. Tame Impala, Khruangbin, Mild High Club and a few you might not know yet.
+
+https://sdz.sh/auNq9M
+```
+
+### Thu 5 Nov. Advanced Spreadsheet Music: phase 0, r/mathrock
+
+Leaves out Jizue and Paranoid Void on purpose, so they can come up as recs or be the surprise later.
+
+```
+Looking for jazzy, piano-driven math rock recommendations
+
+I've been into GoGo Penguin, Mouse on the Keys and Dans Dans for [a while / years], and [hook: what got you into the jazzier side]. I'm putting together a playlist around that sound: piano, jazz chords, odd time signatures, but still a band that hits.
+
+Bonus points for newer or lesser known stuff. What should be on it?
+```
+
+### Fri 6 Nov. Neo-Psych Chill: phase 1b, r/TameImpala or r/Khruangbin
+
+Swap the artist name for whichever sub you pick. Only credit r/psychedelicrock if that thread actually gave you something.
+
+```
+Hope it's okay to share! I made a hazy neo-psych playlist
+
+[Hook: when you got into Tame Impala / Khruangbin.] I started with them and Unknown Mortal Orchestra and worked from there. Have to say I discovered quite some fun bands along the way, DOOM GONG and The Mysterons especially.
+
+Big thanks to r/psychedelicrock for the extra recommendations!
+
+https://sdz.sh/auNq9M
+```
+
+### Sat 7 Nov. Microtonal Madness: phase 2, r/xenharmonic (check)
 
 Theory-heavy crowd. Only name a tuning if it's verified (Xenharmonic Wiki, interviews, album notes), otherwise leave it out.
 
@@ -182,15 +235,23 @@ Probably not the most theory-heavy list this sub has seen, but I figured some of
 
 [Optional: one verified line on the tunings in there.]
 
-Sequenced as a full listen. Curious what I'm missing, especially newer bands doing this with guitars.
+Curious what I'm missing, especially newer bands doing this with guitars.
 
 https://sdz.sh/fDYx9P
+```
+
+### Sun 8 Nov. Two Minutes Hate: Bluesky bump
+
+```
+New name, tighter list. Best of 80s Punk is now Two Minutes Hate: 80s hardcore, nothing over 2:15. Black Flag, Minor Threat, Bad Brains, Discharge, Siege. 30 tracks, 47 minutes.
+
+https://sdz.sh/LuZUih
 ```
 
 ### Microtonal Madness: phase 3, general playlist sub
 
 ```
-I made a microtonal psych rock playlist with the King Gizzard microtonal trilogy, Angine de Poitrine and Altin Gün, plus a bunch of lesser known acts. Lots of great input from r/KGATLW and r/microtonal. Intended as a full listen rather than a shuffle. Hope you enjoy!
+I made a microtonal psych rock playlist with the King Gizzard microtonal trilogy, Angine de Poitrine and Altin Gün, plus a bunch of lesser known acts. Lots of great input from r/KGATLW and r/microtonal. Hope you enjoy!
 
 https://sdz.sh/fDYx9P
 ```
