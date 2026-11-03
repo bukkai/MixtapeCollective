@@ -1,17 +1,21 @@
 // Checks that published playlists still work: the smartlink resolves and lists its platforms,
-// the Deezer playlist exists, and every track on it can be played in the given countries.
+// each platform's playlist exists, and every track on it can be played in the given countries.
 //
 //   npm run check:links                         every published playlist, checked for NL
 //   npm run check:links -- emotive-math-rock    just these
 //   npm run check:links -- --country NL,BE,US   other countries
 //   npm run check:links -- --report report.md   also write the report as Markdown
 //
+// Deezer needs no key. Spotify needs SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, YouTube needs
+// YOUTUBE_API_KEY. A platform without its key is skipped, and the report says so.
+//
 // Exits with 1 when something needs attention, so CI can act on it.
-// Tracks the API calls dead don't count while Deezer probably still plays them: the same
+// Tracks Deezer's API calls dead don't count while Deezer probably still plays them: the same
 // recording (same ISRC) is back under a new id, or the album is still in the catalog. Those are
-// listed separately as worth a listen.
+// listed separately as worth a look, like track counts that differ between platforms.
 // Deezer's `readable` flag depends on where the request comes from, so tracks are checked
 // against `available_countries` instead. That works the same on a laptop or a US CI runner.
+// Spotify and YouTube take the country as a parameter, so they don't have that problem.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -29,15 +33,22 @@ const { values: opts, positionals: slugs } = parseArgs({
 });
 
 const countries = opts.country.split(',').map((c) => c.trim().toUpperCase());
+const env = process.env;
+const keys = {
+  spotify: env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET,
+  youtube: env.YOUTUBE_API_KEY,
+};
 
 const platforms = {
   deezer: /https:\/\/www\.deezer\.com\/(?:[a-z]{2}\/)?playlist\/(\d+)/,
-  spotify: /https:\/\/open\.spotify\.com\/playlist\/[A-Za-z0-9]+/,
-  youtube: /https:\/\/music\.youtube\.com\/playlist\?list=[\w-]+/,
+  spotify: /https:\/\/open\.spotify\.com\/playlist\/([A-Za-z0-9]+)/,
+  youtube: /https:\/\/music\.youtube\.com\/playlist\?list=([\w-]+)/,
 };
 
-// Deezer allows 50 requests per 5 seconds, stay well under it
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const chunks = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, (i + 1) * size));
+
+// Deezer allows 50 requests per 5 seconds, stay well under it
 let lastRequest = 0;
 async function deezer(url, attempt = 1) {
   const wait = lastRequest + 150 - Date.now();
@@ -55,6 +66,43 @@ async function deezer(url, attempt = 1) {
   return deezer(url, attempt + 1);
 }
 
+// Client credentials are enough for public playlists. The token lasts an hour, a run takes minutes.
+let spotifyToken;
+async function spotify(url) {
+  if (!spotifyToken) {
+    const res = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'grant_type=client_credentials',
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(`Spotify login failed: ${data.error_description ?? data.error ?? res.status}`);
+    spotifyToken = data.access_token;
+  }
+  const res = await fetch(url.startsWith('https:') ? url : `https://api.spotify.com/v1${url}`, {
+    headers: { Authorization: `Bearer ${spotifyToken}` },
+  });
+  if (res.status === 429) {
+    await sleep((Number(res.headers.get('retry-after')) || 5) * 1000);
+    return spotify(url);
+  }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`Spotify ${res.status}: ${data.error?.message ?? 'no details'}`);
+  return data;
+}
+
+async function youtube(endpoint, params) {
+  const url = new URL(`https://www.googleapis.com/youtube/v3/${endpoint}`);
+  for (const [k, v] of Object.entries({ ...params, key: env.YOUTUBE_API_KEY })) if (v) url.searchParams.set(k, v);
+  const res = await fetch(url);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(`YouTube ${res.status}: ${data.error?.message ?? 'no details'}`);
+  return data;
+}
+
 async function smartlinkPlatforms(smartlink) {
   const res = await fetch(smartlink, { headers: { 'User-Agent': 'Mozilla/5.0 (mixtape-collective link check)' } });
   if (!res.ok) throw new Error(`smartlink returned ${res.status}`);
@@ -62,7 +110,7 @@ async function smartlinkPlatforms(smartlink) {
   const found = {};
   for (const [name, re] of Object.entries(platforms)) {
     const m = html.match(re);
-    if (m) found[name] = m;
+    if (m) found[name] = m[1];
   }
   return found;
 }
@@ -103,31 +151,9 @@ async function replacement(track) {
   }
 }
 
-async function check(slug, data) {
-  const problems = [];
-  const probablyPlays = [];
-  const info = [];
-
-  if (!data.smartlink) return { problems: ['no smartlink in front matter'], probablyPlays, info };
-
-  let found;
-  try {
-    found = await smartlinkPlatforms(data.smartlink);
-  } catch (e) {
-    return { problems: [`${data.smartlink}: ${e.message}`], probablyPlays, info };
-  }
-  const missing = Object.keys(platforms).filter((p) => !found[p]);
-  if (missing.length) problems.push(`smartlink doesn't list ${missing.join(', ')}`);
-  if (!found.deezer) return { problems, probablyPlays, info };
-
-  let tracks;
-  try {
-    tracks = await deezerTracks(found.deezer[1]);
-  } catch (e) {
-    problems.push(e.message);
-    return { problems, probablyPlays, info };
-  }
-  info.push(`${tracks.length} tracks on Deezer`);
+async function checkDeezer(id, out) {
+  const tracks = await deezerTracks(id);
+  out.counts.Deezer = tracks.length;
 
   for (const t of tracks) {
     const detail = await deezer(`/track/${t.id}`);
@@ -137,13 +163,13 @@ async function check(slug, data) {
     if (detail.error || !available.length) problem = `${label} is pulled from Deezer everywhere`;
     else {
       const blocked = countries.filter((c) => !available.includes(c));
-      if (blocked.length) problem = `${label} not playable in ${blocked.join(', ')}`;
+      if (blocked.length) problem = `${label} not playable on Deezer in ${blocked.join(', ')}`;
     }
     if (!problem) continue;
     const copy = (swap) => `[${swap.title}, from ${swap.album.title}](${swap.link})`;
     const same = await reupload(t);
     if (same) {
-      probablyPlays.push(`${label} plays as its re-upload ${copy(same)}`);
+      out.minor.push(`${label} plays on Deezer as its re-upload ${copy(same)}`);
       continue;
     }
     const swap = await replacement(t);
@@ -152,19 +178,113 @@ async function check(slug, data) {
     // plays. Only count it while its album is gone from the catalog as well.
     const album = detail.album && (await deezer(`/album/${detail.album.id}`));
     if (!detail.error && album && !album.error && album.available !== false) {
-      probablyPlays.push(`${problem} according to the API, but its album is still listed, so it probably plays${suggestion}`);
+      out.minor.push(`${problem} according to the API, but its album is still listed, so it probably plays${suggestion}`);
       continue;
     }
-    problems.push(`${problem}, album gone too${suggestion}`);
+    out.problems.push(`${problem}, album gone too${suggestion}`);
+  }
+}
+
+// With a market, Spotify relinks dead ids to a playable copy by itself and only reports
+// is_playable false when there's really nothing to play. A removed track comes back as null.
+async function checkSpotify(id, out) {
+  const blocked = new Map();
+  let removed = 0;
+  for (const market of countries) {
+    const items = [];
+    let url = `/playlists/${id}/tracks?market=${market}&limit=100&fields=next,items(is_local,track(name,is_playable,restrictions,artists(name)))`;
+    while (url) {
+      const page = await spotify(url);
+      items.push(...page.items);
+      url = page.next;
+    }
+    out.counts.Spotify = items.length;
+    removed = items.filter((i) => !i.track).length;
+    for (const { is_local, track: t } of items) {
+      if (is_local || !t || t.is_playable !== false) continue;
+      const reason = t.restrictions?.reason ? ` (${t.restrictions.reason})` : '';
+      const label = `"${t.name}" by ${t.artists.map((a) => a.name).join(', ')}${reason}`;
+      blocked.set(label, [...(blocked.get(label) ?? []), market]);
+    }
+  }
+  for (const [label, markets] of blocked) out.problems.push(`${label} not playable on Spotify in ${markets.join(', ')}`);
+  if (removed) out.problems.push(`${removed} track${removed > 1 ? 's are' : ' is'} gone from Spotify, the playlist shows ${removed > 1 ? 'them' : 'it'} as unavailable`);
+}
+
+// Removed videos stay in the playlist as "Deleted video" or "Private video", and the videos
+// endpoint simply leaves them out. Region blocks are on the video itself.
+async function checkYoutube(id, out) {
+  const items = [];
+  let pageToken;
+  do {
+    const page = await youtube('playlistItems', { part: 'snippet,status', playlistId: id, maxResults: 50, pageToken });
+    items.push(...page.items);
+    pageToken = page.nextPageToken;
+  } while (pageToken);
+  out.counts.YouTube = items.length;
+
+  const videos = new Map();
+  for (const ids of chunks(items.map((i) => i.snippet.resourceId.videoId), 50)) {
+    const page = await youtube('videos', { part: 'status,contentDetails', id: ids.join(','), maxResults: 50 });
+    for (const v of page.items) videos.set(v.id, v);
   }
 
-  return { problems, probablyPlays, info };
+  for (const item of items) {
+    const { title, videoOwnerChannelTitle: channel, resourceId } = item.snippet;
+    const position = item.snippet.position + 1;
+    // A deleted video loses its title and channel, so only its position is left to go on
+    const label = channel ? `"${title}" by ${channel.replace(/ - Topic$/, '')}` : `Track ${position} ("${title}")`;
+    const v = videos.get(resourceId.videoId);
+    if (!v || v.status.privacyStatus === 'private' || !['processed', 'uploaded'].includes(v.status.uploadStatus)) {
+      out.problems.push(`${label} is gone from YouTube (position ${position}, video ${resourceId.videoId})`);
+      continue;
+    }
+    const region = v.contentDetails.regionRestriction ?? {};
+    const off = countries.filter((c) => region.blocked?.includes(c) || (region.allowed && !region.allowed.includes(c)));
+    if (off.length) out.problems.push(`${label} blocked on YouTube in ${off.join(', ')}`);
+  }
+}
+
+const checks = { deezer: checkDeezer, spotify: checkSpotify, youtube: checkYoutube };
+const names = { deezer: 'Deezer', spotify: 'Spotify', youtube: 'YouTube' };
+
+async function check(slug, data) {
+  const out = { problems: [], minor: [], counts: {} };
+  if (!data.smartlink) return { ...out, problems: ['no smartlink in front matter'] };
+
+  let found;
+  try {
+    found = await smartlinkPlatforms(data.smartlink);
+  } catch (e) {
+    return { ...out, problems: [`${data.smartlink}: ${e.message}`] };
+  }
+  const missing = Object.keys(platforms).filter((p) => !found[p]);
+  if (missing.length) out.problems.push(`smartlink doesn't list ${missing.map((p) => names[p]).join(', ')}`);
+
+  for (const [platform, run] of Object.entries(checks)) {
+    if (!found[platform] || (platform in keys && !keys[platform])) continue;
+    try {
+      await run(found[platform], out);
+    } catch (e) {
+      out.problems.push(e.message);
+    }
+  }
+
+  // Soundiiz can't always find a match on every platform, so a gap is worth a look, not an alarm
+  const counts = Object.entries(out.counts);
+  if (new Set(counts.map(([, n]) => n)).size > 1) {
+    out.minor.push(`Track counts differ: ${counts.map(([p, n]) => `${p} ${n}`).join(', ')}. A sync may have dropped one`);
+  }
+  return out;
 }
 
 const files = fs
   .readdirSync(path.join(root, 'playlists'))
   .filter((f) => f.endsWith('.md'))
   .filter((f) => !slugs.length || slugs.includes(path.basename(f, '.md')));
+
+const checked = ['Deezer', ...Object.keys(keys).map((p) => (keys[p] ? names[p] : `${names[p]} skipped (no key)`))];
+console.log(`Checking ${checked.join(', ')}\n`);
 
 const results = [];
 for (const file of files) {
@@ -175,20 +295,21 @@ for (const file of files) {
   const result = await check(slug, data);
   results.push({ slug, title: data.title, ...result });
   const mark = result.problems.length ? '✗' : '✓';
-  console.log(`${mark} ${data.title}${result.info.length ? ` (${result.info.join(', ')})` : ''}`);
+  const counts = Object.entries(result.counts).map(([p, n]) => `${p} ${n}`);
+  console.log(`${mark} ${data.title}${counts.length ? ` (${counts.join(', ')})` : ''}`);
   for (const p of result.problems) console.log(`    ${p}`);
-  for (const p of result.probablyPlays) console.log(`    (probably plays) ${p}`);
+  for (const p of result.minor) console.log(`    (minor) ${p}`);
 }
 
 const broken = results.filter((r) => r.problems.length);
-const tidy = results.filter((r) => r.probablyPlays.length);
+const tidy = results.filter((r) => r.minor.length);
 console.log(
-  `\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention, ${tidy.length} worth a listen`,
+  `\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention, ${tidy.length} worth a look`,
 );
 
 if (opts.report) {
   const lines = [
-    `Checked ${results.length} published playlists on ${new Date().toISOString().slice(0, 10)}, tracks checked for ${countries.join(', ')}.`,
+    `Checked ${results.length} published playlists on ${new Date().toISOString().slice(0, 10)} for ${countries.join(', ')}: ${checked.join(', ')}.`,
     '',
   ];
   for (const r of broken) {
@@ -200,14 +321,14 @@ if (opts.report) {
   // `*` bullets so the workflow's "did the list change" check only looks at real problems
   if (tidy.length) {
     lines.push(
-      '<details><summary>Probably still plays, worth a listen when convenient</summary>',
+      '<details><summary>Worth a look when convenient</summary>',
       '',
-      "Deezer's API calls these dead, but the app most likely plays them or a copy in their place. If one doesn't play, swap it.",
+      "Tracks Deezer's API calls dead while the app most likely still plays them or a copy, and playlists whose track counts differ between platforms.",
       '',
     );
     for (const r of tidy) {
       lines.push(`**${r.title}**`, '');
-      for (const p of r.probablyPlays) lines.push(`* ${p}`);
+      for (const p of r.minor) lines.push(`* ${p}`);
       lines.push('');
     }
     lines.push('</details>');

@@ -32,6 +32,11 @@ jobs:
       - id: check
         run: npm run check:links -- --report report.md
         continue-on-error: true
+        # Platforms without a key are skipped
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
       - name: Report
         run: |
           issue=$(gh issue list --state open --search "in:title \"$TITLE\"" --json number --jq '.[0].number')
@@ -47,7 +52,7 @@ jobs:
             exit 0
           fi
           # Editing the body sends no notification, so comment when the list of problems changed.
-          # Problems are `-` bullets, tracks that probably still play use `*` and don't count.
+          # Problems are `-` bullets, minor findings use `*` and don't count.
           gh issue view "$issue" --json body --jq .body | grep '^- ' > before || true
           grep '^- ' report.md > after || true
           gh issue edit "$issue" --body-file report.md
