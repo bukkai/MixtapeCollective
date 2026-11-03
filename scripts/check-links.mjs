@@ -256,8 +256,9 @@ async function checkYoutube(id, out) {
     const region = v.contentDetails.regionRestriction ?? {};
     const off = countries.filter((c) => region.blocked?.includes(c) || (region.allowed && !region.allowed.includes(c)));
     // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
-    const how = region.blocked?.length ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
-    if (off.length) out.minor.push(`${label} blocked on YouTube in ${off.join(', ')} (${how}), YouTube Music probably plays another version`);
+    if (!off.length) continue;
+    const how = region.blocked?.includes(off[0]) ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
+    out.minor.push(`${label} blocked on YouTube in ${off.join(', ')} (${how}), YouTube Music probably plays another version`);
   }
 }
 
