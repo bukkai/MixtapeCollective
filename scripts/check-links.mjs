@@ -7,6 +7,8 @@
 //   npm run check:links -- --report report.md   also write the report as Markdown
 //
 // Exits with 1 when something needs attention, so CI can act on it.
+// Dead tracks that came back as the same recording (same ISRC) under a new id don't count:
+// Deezer quietly plays the new copy, so those are listed separately as worth tidying up.
 // Deezer's `readable` flag depends on where the request comes from, so tracks are checked
 // against `available_countries` instead. That works the same on a laptop or a US CI runner.
 
@@ -74,8 +76,16 @@ async function deezerTracks(id) {
   }
 }
 
-// Pulled tracks often come back as a re-upload under a new id. Look for the same title by the
-// same artist that does play everywhere we care about.
+const playsEverywhere = (detail) => countries.every((c) => detail.available_countries?.includes(c));
+
+// The same recording re-uploaded under a new id, which Deezer plays in place of the dead one
+async function reupload(track) {
+  if (!track.isrc) return;
+  const found = await deezer(`/track/isrc:${track.isrc}`);
+  if (!found.error && found.id !== track.id && playsEverywhere(found)) return found;
+}
+
+// Otherwise look for the same title by the same artist that does play everywhere we care about.
 // Deezer's artist:"" track:"" search syntax returns nothing lately, so search plainly and match
 // on names. Re-uploads can sit under a new artist id, so ids don't help either.
 async function replacement(track) {
@@ -88,33 +98,33 @@ async function replacement(track) {
   // Same version first, so a live or acoustic take only comes up when nothing else does
   candidates.sort((a, b) => same(b.title, track.title) - same(a.title, track.title));
   for (const c of candidates.slice(0, 5)) {
-    const detail = await deezer(`/track/${c.id}`);
-    if (countries.every((country) => detail.available_countries?.includes(country))) return c;
+    if (playsEverywhere(await deezer(`/track/${c.id}`))) return c;
   }
 }
 
 async function check(slug, data) {
   const problems = [];
+  const reuploads = [];
   const info = [];
 
-  if (!data.smartlink) return { problems: ['no smartlink in front matter'], info };
+  if (!data.smartlink) return { problems: ['no smartlink in front matter'], reuploads, info };
 
   let found;
   try {
     found = await smartlinkPlatforms(data.smartlink);
   } catch (e) {
-    return { problems: [`${data.smartlink}: ${e.message}`], info };
+    return { problems: [`${data.smartlink}: ${e.message}`], reuploads, info };
   }
   const missing = Object.keys(platforms).filter((p) => !found[p]);
   if (missing.length) problems.push(`smartlink doesn't list ${missing.join(', ')}`);
-  if (!found.deezer) return { problems, info };
+  if (!found.deezer) return { problems, reuploads, info };
 
   let tracks;
   try {
     tracks = await deezerTracks(found.deezer[1]);
   } catch (e) {
     problems.push(e.message);
-    return { problems, info };
+    return { problems, reuploads, info };
   }
   info.push(`${tracks.length} tracks on Deezer`);
 
@@ -129,11 +139,17 @@ async function check(slug, data) {
       if (blocked.length) problem = `${label} not playable in ${blocked.join(', ')}`;
     }
     if (!problem) continue;
+    const copy = (swap) => `[${swap.title}, from ${swap.album.title}](${swap.link})`;
+    const same = await reupload(t);
+    if (same) {
+      reuploads.push(`${label} plays as its re-upload ${copy(same)}`);
+      continue;
+    }
     const swap = await replacement(t);
-    problems.push(swap ? `${problem}. Playable copy: [${swap.title}, from ${swap.album.title}](${swap.link})` : problem);
+    problems.push(swap ? `${problem}. Playable copy, check the version: ${copy(swap)}` : problem);
   }
 
-  return { problems, info };
+  return { problems, reuploads, info };
 }
 
 const files = fs
@@ -152,10 +168,14 @@ for (const file of files) {
   const mark = result.problems.length ? '✗' : '✓';
   console.log(`${mark} ${data.title}${result.info.length ? ` (${result.info.join(', ')})` : ''}`);
   for (const p of result.problems) console.log(`    ${p}`);
+  for (const p of result.reuploads) console.log(`    (re-upload) ${p}`);
 }
 
 const broken = results.filter((r) => r.problems.length);
-console.log(`\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention`);
+const tidy = results.filter((r) => r.reuploads.length);
+console.log(
+  `\n${results.length} playlists checked for ${countries.join(', ')}, ${broken.length} need attention, ${tidy.length} have re-uploads to tidy`,
+);
 
 if (opts.report) {
   const lines = [
@@ -167,7 +187,22 @@ if (opts.report) {
     for (const p of r.problems) lines.push(`- ${p}`);
     lines.push('');
   }
-  if (!broken.length) lines.push('Everything plays.');
+  if (!broken.length) lines.push('Everything plays.', '');
+  // `*` bullets so the workflow's "did the list change" check only looks at real problems
+  if (tidy.length) {
+    lines.push(
+      '<details><summary>Re-uploads to tidy up when convenient</summary>',
+      '',
+      'These still play because Deezer swaps in the same recording, but the playlist points at a dead id.',
+      '',
+    );
+    for (const r of tidy) {
+      lines.push(`**${r.title}**`, '');
+      for (const p of r.reuploads) lines.push(`* ${p}`);
+      lines.push('');
+    }
+    lines.push('</details>');
+  }
   fs.writeFileSync(opts.report, lines.join('\n'));
 }
 
