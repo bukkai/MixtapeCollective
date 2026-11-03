@@ -6,8 +6,9 @@
 //   npm run check:links -- --country NL,BE,US   other countries
 //   npm run check:links -- --report report.md   also write the report as Markdown
 //
-// Deezer needs no key. Spotify needs SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, YouTube needs
-// YOUTUBE_API_KEY. A platform without its key is skipped, and the report says so.
+// Deezer needs no key. YouTube needs YOUTUBE_API_KEY and is skipped without it. Spotify checks
+// every track with SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, and without them only whether
+// the playlist exists and how many tracks it has. The report says which ran.
 //
 // Exits with 1 when something needs attention, so CI can act on it.
 // Tracks Deezer's API calls dead don't count while Deezer probably still plays them: the same
@@ -211,6 +212,16 @@ async function checkSpotify(id, out) {
   if (removed) out.problems.push(`${removed} track${removed > 1 ? 's are' : ' is'} gone from Spotify, the playlist shows ${removed > 1 ? 'them' : 'it'} as unavailable`);
 }
 
+// The Web API needs an app whose owner has Premium. Without a key, the public playlist page
+// still tells whether the playlist exists and how many tracks it has, from its preview tags.
+async function checkSpotifyPage(id, out) {
+  const res = await fetch(`https://open.spotify.com/playlist/${id}`, { headers: { 'User-Agent': 'Mozilla/5.0 (mixtape-collective link check)' } });
+  if (res.status === 404) throw new Error(`Spotify playlist ${id} is gone`);
+  if (!res.ok) throw new Error(`Spotify playlist page returned ${res.status}`);
+  const count = (await res.text()).match(/<meta name="music:song_count" content="(\d+)"/)?.[1];
+  if (count) out.counts.Spotify = Number(count);
+}
+
 // Removed videos stay in the playlist as "Deleted video" or "Private video", and the videos
 // endpoint simply leaves them out. Region blocks are on the video itself.
 async function checkYoutube(id, out) {
@@ -245,7 +256,7 @@ async function checkYoutube(id, out) {
   }
 }
 
-const checks = { deezer: checkDeezer, spotify: checkSpotify, youtube: checkYoutube };
+const checks = { deezer: checkDeezer, spotify: keys.spotify ? checkSpotify : checkSpotifyPage, youtube: checkYoutube };
 const names = { deezer: 'Deezer', spotify: 'Spotify', youtube: 'YouTube' };
 
 async function check(slug, data) {
@@ -262,7 +273,7 @@ async function check(slug, data) {
   if (missing.length) out.problems.push(`smartlink doesn't list ${missing.map((p) => names[p]).join(', ')}`);
 
   for (const [platform, run] of Object.entries(checks)) {
-    if (!found[platform] || (platform in keys && !keys[platform])) continue;
+    if (!found[platform] || (platform === 'youtube' && !keys.youtube)) continue;
     try {
       await run(found[platform], out);
     } catch (e) {
@@ -283,7 +294,11 @@ const files = fs
   .filter((f) => f.endsWith('.md'))
   .filter((f) => !slugs.length || slugs.includes(path.basename(f, '.md')));
 
-const checked = ['Deezer', ...Object.keys(keys).map((p) => (keys[p] ? names[p] : `${names[p]} skipped (no key)`))];
+const checked = [
+  'Deezer',
+  keys.spotify ? 'Spotify' : 'Spotify (playlist and track count only, no key)',
+  keys.youtube ? 'YouTube' : 'YouTube skipped (no key)',
+];
 console.log(`Checking ${checked.join(', ')}\n`);
 
 const results = [];
