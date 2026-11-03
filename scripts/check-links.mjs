@@ -223,7 +223,9 @@ async function checkSpotifyPage(id, out) {
 }
 
 // Removed videos stay in the playlist as "Deleted video" or "Private video", and the videos
-// endpoint simply leaves them out. Region blocks are on the video itself.
+// endpoint simply leaves them out. Region blocks are on the video itself, but YouTube Music
+// plays another version of the song in their place (tested Nov 2026: fully blocked, allowed in
+// 3 countries and allowed in 34 all played in NL), so those are only worth a look.
 async function checkYoutube(id, out) {
   const items = [];
   let pageToken;
@@ -255,7 +257,7 @@ async function checkYoutube(id, out) {
     const off = countries.filter((c) => region.blocked?.includes(c) || (region.allowed && !region.allowed.includes(c)));
     // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
     const how = region.blocked?.length ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
-    if (off.length) out.problems.push(`${label} blocked on YouTube in ${off.join(', ')} (${how})`);
+    if (off.length) out.minor.push(`${label} blocked on YouTube in ${off.join(', ')} (${how}), YouTube Music probably plays another version`);
   }
 }
 
@@ -341,7 +343,7 @@ if (opts.report) {
     lines.push(
       '<details><summary>Worth a look when convenient</summary>',
       '',
-      "Tracks Deezer's API calls dead while the app most likely still plays them or a copy, and playlists whose track counts differ between platforms.",
+      "Tracks Deezer or YouTube call unplayable while the app most likely still plays them or another version, and playlists whose track counts differ between platforms.",
       '',
     );
     for (const r of tidy) {
