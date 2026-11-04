@@ -223,9 +223,41 @@ async function checkSpotifyPage(id, out) {
 }
 
 // Removed videos stay in the playlist as "Deleted video" or "Private video", and the videos
-// endpoint simply leaves them out. Region blocks are on the video itself, but YouTube Music
+// endpoint simply leaves them out. Region blocks are on the video itself. YouTube Music often
 // plays another version of the song in their place (tested Nov 2026: fully blocked, allowed in
-// 3 countries and allowed in 34 all played in NL), so those are only worth a look.
+// 3 countries and allowed in 34 all played in NL), so those are only worth a look, with a
+// version that plays when one turns up.
+const playsOnYoutube = (v) => {
+  const region = v.contentDetails?.regionRestriction ?? {};
+  return (
+    v.status?.privacyStatus !== 'private' &&
+    ['processed', 'uploaded'].includes(v.status?.uploadStatus) &&
+    countries.every((c) => !region.blocked?.includes(c) && (!region.allowed || region.allowed.includes(c)))
+  );
+};
+
+// A search costs 100 of the 10,000 units a day. 45 per run covers every blocked track today and
+// still leaves room for a second run the same day.
+let searchesLeft = 45;
+const plain = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+// YouTube Music doesn't always swap in another version of a region-blocked song (King Gizzard
+// in NL, Nov 2026), so look for the same song by the same artist that does play. Topic channels
+// first, those are the plain audio versions YouTube Music treats as songs.
+async function youtubeAlternative(title, artist, skip) {
+  if (searchesLeft-- <= 0) return;
+  // A suggestion is a bonus, so running out of quota halfway shouldn't fail the playlist
+  const found = await youtube('search', { part: 'snippet', q: `${artist} ${title}`, type: 'video', regionCode: countries[0], maxResults: 10 }).catch(() => null);
+  if (!found) return;
+  const candidates = found.items.filter(
+    (c) => c.id.videoId !== skip && plain(c.snippet.title).includes(plain(title)) && plain(`${c.snippet.channelTitle} ${c.snippet.title}`).includes(plain(artist)),
+  );
+  if (!candidates.length) return;
+  const page = await youtube('videos', { part: 'status,contentDetails,snippet', id: candidates.map((c) => c.id.videoId).join(',') }).catch(() => null);
+  const playable = (page?.items ?? []).filter(playsOnYoutube);
+  return playable.find((v) => v.snippet.channelTitle.endsWith(' - Topic')) ?? playable[0];
+}
+
 async function checkYoutube(id, out) {
   const items = [];
   let pageToken;
@@ -258,7 +290,11 @@ async function checkYoutube(id, out) {
     // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
     if (!off.length) continue;
     const how = region.blocked?.includes(off[0]) ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
-    out.minor.push(`${label} blocked on YouTube in ${off.join(', ')} (${how}), YouTube Music probably plays another version`);
+    const swap = channel && (await youtubeAlternative(title, channel.replace(/ - Topic$/, ''), resourceId.videoId));
+    const suggestion = swap
+      ? `. Version that plays: [${swap.snippet.title}, from ${swap.snippet.channelTitle}](https://music.youtube.com/watch?v=${swap.id})`
+      : '';
+    out.minor.push(`${label} blocked on YouTube in ${off.join(', ')} (${how}), YouTube Music may or may not play another version${suggestion}`);
   }
 }
 
