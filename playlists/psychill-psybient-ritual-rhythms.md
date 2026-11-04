@@ -1,5 +1,6 @@
 ---
 title: "Psychill / Psybient Ritual Rhythms"
+youtubeTitle: "Psychill / Psybient Ritual Rhythms | Shpongle, Ott, Desert Dwellers"
 type: collection
 genres: "Psybient / psychill"
 color: hot-pink

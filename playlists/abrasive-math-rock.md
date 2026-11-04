@@ -1,5 +1,6 @@
 ---
 title: "Abrasive Math Rock"
+youtubeTitle: "Abrasive Math Rock | noisy math rock & post-hardcore (Don Caballero, Hella, Battles)"
 type: collection
 genres: "Math rock / noise / post-hardcore"
 color: deep-indigo

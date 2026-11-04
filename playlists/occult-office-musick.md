@@ -1,5 +1,6 @@
 ---
 title: "Occult Office Musick"
+youtubeTitle: "Occult Office Musick | dark ambient & ritual industrial (Coil, Lustmord, Throbbing Gristle)"
 type: collection
 genres: "Dark ambient / ritual electronics / post-industrial"
 color: dark-teal

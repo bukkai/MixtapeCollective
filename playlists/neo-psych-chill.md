@@ -1,5 +1,6 @@
 ---
 title: "Neo-Psych Chill"
+youtubeTitle: "Neo-Psych Chill | chill psychedelic rock (Khruangbin, Tame Impala, Mild High Club)"
 type: collection
 genres: "Neo-psych / lo-fi psych / jazz-tinged psych"
 color: pale-lavender

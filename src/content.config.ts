@@ -10,6 +10,9 @@ const playlists = defineCollection({
   loader: glob({ pattern: '*.md', base: './playlists' }),
   schema: z.object({
     title: z.string(),
+    // Set by hand when publishing to YouTube: own name first, search terms after the pipe.
+    // YouTube allows 150 characters, mobile search shows roughly the first 50 to 60.
+    youtubeTitle: z.string().max(150).optional(),
     type: z.enum(['collection', 'era-retrospective']),
     genres: z.string(),
     color: z.enum(colorKeys),

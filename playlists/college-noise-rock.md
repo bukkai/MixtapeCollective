@@ -1,5 +1,6 @@
 ---
 title: "College Noise Rock"
+youtubeTitle: "College Noise Rock | noise rock & college rock (Sonic Youth, Pixies, Dinosaur Jr.)"
 type: collection
 genres: "Noise rock / alt rock"
 color: dark-blue

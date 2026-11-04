@@ -1,5 +1,6 @@
 ---
 title: "Emotive Math Rock"
+youtubeTitle: "Emotive Math Rock | chill emo math rock (Toe, Chon, American Football)"
 type: collection
 genres: "Math rock / emo"
 color: light-blue

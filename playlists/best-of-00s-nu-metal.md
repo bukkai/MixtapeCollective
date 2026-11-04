@@ -1,5 +1,6 @@
 ---
 title: "Best of 00s Nu-metal"
+youtubeTitle: "Best of 00s Nu-metal | 2000s nu metal hits (Korn, Slipknot, Deftones, Linkin Park)"
 type: era-retrospective
 genres: "Nu-metal"
 color: dark-maroon
