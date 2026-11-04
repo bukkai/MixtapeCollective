@@ -23,7 +23,7 @@ Was Best of 80s Punk. Repurposed instead of replaced so the followers stay. Same
 
 The rule: 80s hardcore, nothing over 2:15. Started as a hard 2:00 cap, loosened so a handful of 2:02 to 2:13 classics could stay. Originally released 1980 to 1989, original studio or EP versions, no live takes.
 
-- No overlap with Punk Rock for Skaters or Rage Against Authority. Where an artist is on Skaters, this list uses a different song (Minor Threat, Descendents, Circle Jerks).
+- No overlap with Grip Tape & Bruises or Rage Against Authority. Where an artist is on Grip Tape & Bruises, this list uses a different song (Minor Threat, Descendents, Circle Jerks).
 - Dead Kennedys gets Religious Vomit, not Nazi Punks Fuck Off: Rage has the Napalm Death cover.
 - Arc: big names (1 to 6), LA, UK and Canada (7 to 13), deep middle from Minutemen to Discharge (14 to 21), NYHC and crossover speeding up (22 to 26), Necros into Siege as the peak, landing on Sailin' On and Can I Say.
 - Bad Brains and Circle Jerks get two each, far apart.
@@ -31,7 +31,7 @@ The rule: 80s hardcore, nothing over 2:15. Started as a hard 2:00 cap, loosened 
 
 ## Cut
 
-- Rise Above, Straight Edge, Wild in the Streets, Suburban Home, Amoeba, Bloodstains, Institutionalized: already on Punk Rock for Skaters
+- Rise Above, Straight Edge, Wild in the Streets, Suburban Home, Amoeba, Bloodstains, Institutionalized: already on Grip Tape & Bruises
 - Manimal, We Are the One, Where Eagles Dare, Smash It Up, Alternative Ulster: late 70s first wave, could seed a 77/78 list someday
 - D-7 - Wipers: closer to post-punk
 - Holiday in Cambodia, Urban Struggle, Rotten To The Core, Degenerated, Bad Attitude, Bloodlights: over the cap

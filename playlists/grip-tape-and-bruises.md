@@ -1,6 +1,6 @@
 ---
-title: "Punk Rock for Skaters"
-youtubeTitle: "Punk Rock for Skaters | skate punk classics (Dead Kennedys, Black Flag, Bad Religion)"
+title: "Grip Tape & Bruises"
+youtubeTitle: "Grip Tape & Bruises | skate punk classics (Dead Kennedys, Black Flag, Bad Religion)"
 type: collection
 genres: "Punk rock"
 color: yellow-green
