@@ -55,7 +55,7 @@ The posts work because they read like a fan reporting back, not a curator pitchi
 
 Sub names marked (check) are guesses or unverified: confirm they exist and allow self-promo.
 
-**Core and adjacent (phases 0 to 2):** per playlist, see the dated plan and the log. Used so far: r/kgatlw, r/microtonal, r/anginedepoitrine, r/mathrock, r/zeuhl, r/coil, r/darkambient.
+**Core and adjacent (phases 0 to 2):** per playlist, see the dated plan and the log. Used so far: r/kgatlw, r/microtonal, r/psychedelicrock, r/anginedepoitrine, r/mathrock, r/zeuhl, r/coil, r/darkambient.
 
 **General playlist subs (phase 3):**
 
@@ -172,32 +172,6 @@ New tape: [Playlist name]. [One-line hook.] [Artist A], [Artist B], [Artist C] a
 
 Filled-in posts, ready to go. Move a post to the log once it's up. Write these during bursts so quiet months are copy and paste.
 
-### Wed 4 Nov. Neo-Psych Chill: phase 1, r/psychedelicrock
-
-Final version, as written by Stephan.
-
-```
-I made a hazy neo-psych playlist
-
-I'd been a fan of Tame Impala ever since the InnerSpeaker days, but I really rediscovered psych rock with King Gizzard and Mild High Club a few years ago. I spent some time finding similar stuff to put in a playlist, so I hope it's alright to share it here.
-
-It's got Tame Impala, Khruangbin, Unknown Mortal Orchestra, a bit of mellow era King Gizzard, but also lesser known stuff like DOOM GONG and The Mysterons.
-
-Recommendations welcome!
-
-https://sdz.sh/auNq9M
-```
-
-### Wed 4 Nov. Neo-Psych Chill: Bluesky launch
-
-Add the cassette cover.
-
-```
-New tape: Neo-Psych Chill. Hazy psych, lazy grooves, wobbly tape. Tame Impala, Khruangbin, Mild High Club and a few you might not know yet.
-
-https://sdz.sh/auNq9M
-```
-
 ### Thu 5 Nov. Advanced Spreadsheet Music: phase 0, r/mathrock
 
 Leaves out Jizue and Paranoid Void on purpose, so they can come up as recs or be the surprise later.
@@ -274,6 +248,8 @@ Newest first. Earlier posts have no date on record.
 
 | Date | Where | Playlist | Phase | Link |
 | --- | --- | --- | --- | --- |
+| 2026-11-04 | Bluesky | Neo-Psych Chill | launch | https://sdz.sh/auNq9M |
+| 2026-11-04 | r/psychedelicrock | Neo-Psych Chill | 1 | https://sdz.sh/auNq9M |
 | 2026-11-03 | r/microtonal | Microtonal Madness | 1b | https://sdz.sh/fDYx9P |
 | 2026-11-03 | r/kgatlw | Microtonal Madness | 1 | https://sdz.sh/fDYx9P |
 | earlier | r/darkambient | Dark Mode Drift (dark ambient vol. 2) | 4 | https://sdz.sh/Boy3V2 |
