@@ -3,6 +3,8 @@
 //   npm run covers                      every playlist with `tape` and `label` set
 //   npm run covers -- emotive-math-rock just these
 //   npm run covers -- emotive-math-rock --label "emomath" --tape scuffed-black --font salt --out /tmp/try
+//   npm run covers -- --youtube         only redo covers/youtube/ from the squares already in covers/
+//                                       (also works for older covers without `tape` and `label`)
 //
 // Writes covers/<slug>.jpg (1000x1000, Deezer and Spotify) and covers/youtube/<slug>.jpg (1280x720).
 // Blank tapes and the corners of their label (top-left, top-right, bottom-right, bottom-left)
@@ -39,10 +41,12 @@ const { values: opts, positionals: slugs } = parseArgs({
     tape: { type: 'string' },
     font: { type: 'string' },
     out: { type: 'string' },
+    youtube: { type: 'boolean' },
   },
 });
 
 const outDir = opts.out ? path.resolve(opts.out) : path.join(root, 'covers');
+fs.mkdirSync(path.join(outDir, 'youtube'), { recursive: true });
 
 // Small stable jitter per playlist so labels don't all sit identically
 function jitter(slug) {
@@ -152,16 +156,50 @@ async function build(slug, data) {
     .jpeg({ quality: 90 })
     .toBuffer();
 
-  // YouTube wants 16:9: same square in the middle, color fills the sides
-  const wide = await sharp({ create: { width: 1280, height: 720, channels: 3, background: color } })
-    .composite([{ input: await sharp(square).resize(720, 720).toBuffer(), left: 280, top: 0 }])
+  fs.writeFileSync(path.join(outDir, `${slug}.jpg`), square);
+  await writeYoutube(slug, square);
+  console.log(`${slug}: "${text}" on ${tapeName}, ${data.color}`);
+}
+
+// YouTube wants 16:9 but YouTube Music crops the middle back to a square, so the middle
+// 720x720 is the square cover untouched. Behind it sits the same cover blown up, heavily
+// blurred and darkened, with a soft shadow and a bit of grain, so the sides pick up the
+// cover's colors without competing with it.
+async function writeYoutube(slug, square) {
+  const W = 1280, H = 720;
+  // Shrink to a handful of pixels first, so only color patches survive (no tape edges or
+  // letters), then scale up and blur those into each other
+  const backdrop = await sharp(await sharp(square).resize(48, 27, { fit: 'cover' }).toBuffer())
+    .resize(W, H, { kernel: 'cubic' })
+    .blur(40)
+    .modulate({ brightness: 0.45, saturation: 1.2 })
+    .toBuffer();
+  const overlay = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs>
+      <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4"/>
+        <feColorMatrix type="matrix" values="0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0 0.5  0 0 0 0.1 0"/></filter>
+      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter>
+    </defs>
+    <rect width="100%" height="100%" filter="url(#grain)"/>
+    <rect x="${(W - H) / 2 + 10}" y="10" width="${H - 20}" height="${H - 20}" fill-opacity="0.65" filter="url(#shadow)"/>
+  </svg>`;
+  const wide = await sharp(backdrop)
+    .composite([
+      { input: Buffer.from(overlay) },
+      { input: await sharp(square).resize(H, H).toBuffer(), left: (W - H) / 2, top: 0 },
+    ])
     .jpeg({ quality: 90 })
     .toBuffer();
-
-  fs.mkdirSync(path.join(outDir, 'youtube'), { recursive: true });
-  fs.writeFileSync(path.join(outDir, `${slug}.jpg`), square);
   fs.writeFileSync(path.join(outDir, 'youtube', `${slug}.jpg`), wide);
-  console.log(`${slug}: "${text}" on ${tapeName}, ${data.color}`);
+}
+
+if (opts.youtube) {
+  const squares = slugs.length ? slugs : fs.readdirSync(path.join(root, 'covers')).filter((f) => f.endsWith('.jpg')).map((f) => path.basename(f, '.jpg'));
+  for (const slug of squares) {
+    await writeYoutube(slug, fs.readFileSync(path.join(root, 'covers', `${slug}.jpg`)));
+    console.log(`${slug}: youtube`);
+  }
+  process.exit(0);
 }
 
 const files = slugs.length ? slugs.map((s) => `${s}.md`) : fs.readdirSync(path.join(root, 'playlists'));
