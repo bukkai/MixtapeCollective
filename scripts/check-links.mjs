@@ -24,6 +24,7 @@ import { parseArgs } from 'node:util';
 import { parse as parseYaml } from 'yaml';
 import {
   platforms,
+  searchQuota,
   sleep,
   smartlinkPlatforms,
   youtubeAlternative,
@@ -311,6 +312,7 @@ if (opts.report) {
     lines.push('');
   }
   if (!broken.length) lines.push('Nothing needs fixing.', '');
+  if (searchQuota.used) lines.push("YouTube's search quota ran out during this run, so some blocked videos have no suggested version.", '');
   // `*` bullets so the workflow's "did the list change" check only looks at real problems
   if (tidy.length) {
     lines.push(

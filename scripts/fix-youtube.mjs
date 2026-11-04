@@ -5,6 +5,7 @@
 //   npm run fix:youtube -- neo-psych-chill --apply              change the playlist
 //   npm run fix:youtube -- neo-psych-chill --apply --skip 6,9   leave tracks 6 and 9 alone
 //   npm run fix:youtube -- neo-psych-chill --country NL,BE      other countries
+//   DEBUG_YOUTUBE=1 npm run fix:youtube -- neo-psych-chill      show what the searches return
 //
 // Changing a playlist needs your permission instead of an API key. One-time setup:
 //   1. Google Cloud console, the MixtapeCollective project: APIs & Services > OAuth consent
@@ -23,7 +24,17 @@ import http from 'node:http';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { parse as parseYaml } from 'yaml';
-import { smartlinkPlatforms, youtube, youtubeAlternative, youtubeBlockedIn, youtubeGone, youtubeItemName, youtubePlaylist, youtubeVideos } from './lib/links.mjs';
+import {
+  searchQuota,
+  smartlinkPlatforms,
+  youtube,
+  youtubeAlternative,
+  youtubeBlockedIn,
+  youtubeGone,
+  youtubeItemName,
+  youtubePlaylist,
+  youtubeVideos,
+} from './lib/links.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const secrets = path.join(root, '.secrets');
@@ -146,7 +157,11 @@ for (const slug of slugs) {
     if (!youtubeBlockedIn(v, countries).length) continue;
     const alt = await youtubeAlternative(title, channel.replace(/ - Topic$/, ''), resourceId.videoId, countries, auth);
     if (!alt) {
-      console.log(`${line}: no version that plays in ${countries.join(', ')} found, fix by hand`);
+      console.log(
+        searchQuota.used
+          ? `${line}: YouTube's search quota for today is used up, run again tomorrow (it resets at 09:00 Dutch time)`
+          : `${line}: no version that plays in ${countries.join(', ')} found, fix by hand`,
+      );
       continue;
     }
     if (inPlaylist.has(alt.id)) {
