@@ -9,7 +9,8 @@
     "check": "astro check",
     "covers": "node scripts/covers.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "stats": "node scripts/stats.mjs"
+    "stats": "node scripts/stats.mjs",
+    "fix:youtube": "node scripts/fix-youtube.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

@@ -22,6 +22,17 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { parse as parseYaml } from 'yaml';
+import {
+  platforms,
+  sleep,
+  smartlinkPlatforms,
+  youtubeAlternative,
+  youtubeBlockedIn,
+  youtubeGone,
+  youtubeItemName,
+  youtubePlaylist,
+  youtubeVideos,
+} from './lib/links.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 
@@ -39,15 +50,6 @@ const keys = {
   spotify: env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET,
   youtube: env.YOUTUBE_API_KEY,
 };
-
-const platforms = {
-  deezer: /https:\/\/www\.deezer\.com\/(?:[a-z]{2}\/)?playlist\/(\d+)/,
-  spotify: /https:\/\/open\.spotify\.com\/playlist\/([A-Za-z0-9]+)/,
-  youtube: /https:\/\/music\.youtube\.com\/playlist\?list=([\w-]+)/,
-};
-
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-const chunks = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, (i + 1) * size));
 
 // Deezer allows 50 requests per 5 seconds, stay well under it
 let lastRequest = 0;
@@ -93,27 +95,6 @@ async function spotify(url) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(`Spotify ${res.status}: ${data.error?.message ?? 'no details'}`);
   return data;
-}
-
-async function youtube(endpoint, params) {
-  const url = new URL(`https://www.googleapis.com/youtube/v3/${endpoint}`);
-  for (const [k, v] of Object.entries({ ...params, key: env.YOUTUBE_API_KEY })) if (v) url.searchParams.set(k, v);
-  const res = await fetch(url);
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`YouTube ${res.status}: ${data.error?.message ?? 'no details'}`);
-  return data;
-}
-
-async function smartlinkPlatforms(smartlink) {
-  const res = await fetch(smartlink, { headers: { 'User-Agent': 'Mozilla/5.0 (mixtape-collective link check)' } });
-  if (!res.ok) throw new Error(`smartlink returned ${res.status}`);
-  const html = await res.text();
-  const found = {};
-  for (const [name, re] of Object.entries(platforms)) {
-    const m = html.match(re);
-    if (m) found[name] = m[1];
-  }
-  return found;
 }
 
 async function deezerTracks(id) {
@@ -226,75 +207,26 @@ async function checkSpotifyPage(id, out) {
 // endpoint simply leaves them out. Region blocks are on the video itself. YouTube Music often
 // plays another version of the song in their place (tested Nov 2026: fully blocked, allowed in
 // 3 countries and allowed in 34 all played in NL), so those are only worth a look, with a
-// version that plays when one turns up.
-const playsOnYoutube = (v) => {
-  const region = v.contentDetails?.regionRestriction ?? {};
-  return (
-    v.status?.privacyStatus !== 'private' &&
-    ['processed', 'uploaded'].includes(v.status?.uploadStatus) &&
-    countries.every((c) => !region.blocked?.includes(c) && (!region.allowed || region.allowed.includes(c)))
-  );
-};
-
-// A search costs 100 of the 10,000 units a day. 45 per run covers every blocked track today and
-// still leaves room for a second run the same day.
-let searchesLeft = 45;
-const plain = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-
-// YouTube Music doesn't always swap in another version of a region-blocked song (King Gizzard
-// in NL, Nov 2026), so look for the same song by the same artist that does play.
-async function youtubeAlternative(title, artist, skip) {
-  if (searchesLeft-- <= 0) return;
-  // A suggestion is a bonus, so running out of quota halfway shouldn't fail the playlist
-  const found = await youtube('search', { part: 'snippet', q: `${artist} ${title}`, type: 'video', regionCode: countries[0], maxResults: 10 }).catch(() => null);
-  if (!found) return;
-  const candidates = found.items.filter(
-    (c) => c.id.videoId !== skip && plain(c.snippet.title).includes(plain(title)) && plain(`${c.snippet.channelTitle} ${c.snippet.title}`).includes(plain(artist)),
-  );
-  if (!candidates.length) return;
-  const page = await youtube('videos', { part: 'status,contentDetails,snippet', id: candidates.map((c) => c.id.videoId).join(',') }).catch(() => null);
-  // The artist's own channel beats a stranger's re-upload, the exact title beats a live or remix
-  // version, and a Topic channel is the tiebreaker
-  const score = (v) =>
-    2 * plain(v.snippet.channelTitle).includes(plain(artist)) +
-    2 * (plain(v.snippet.title).replace(plain(artist), '').trim() === plain(title)) +
-    v.snippet.channelTitle.endsWith(' - Topic');
-  return (page?.items ?? []).filter(playsOnYoutube).sort((a, b) => score(b) - score(a))[0];
-}
-
+// version that plays when one turns up. `npm run fix:youtube` swaps those in.
 async function checkYoutube(id, out) {
-  const items = [];
-  let pageToken;
-  do {
-    const page = await youtube('playlistItems', { part: 'snippet,status', playlistId: id, maxResults: 50, pageToken });
-    items.push(...page.items);
-    pageToken = page.nextPageToken;
-  } while (pageToken);
+  const items = await youtubePlaylist(id);
   out.counts.YouTube = items.length;
-
-  const videos = new Map();
-  for (const ids of chunks(items.map((i) => i.snippet.resourceId.videoId), 50)) {
-    const page = await youtube('videos', { part: 'status,contentDetails', id: ids.join(','), maxResults: 50 });
-    for (const v of page.items) videos.set(v.id, v);
-  }
+  const videos = await youtubeVideos(items.map((i) => i.snippet.resourceId.videoId));
 
   for (const item of items) {
     const { title, videoOwnerChannelTitle: channel, resourceId } = item.snippet;
-    const position = item.snippet.position + 1;
-    // A deleted video loses its title and channel, so only its position is left to go on
-    const name = channel ? `"${title}" by ${channel.replace(/ - Topic$/, '')}` : `Track ${position} ("${title}")`;
-    const label = `[${name}](https://music.youtube.com/watch?v=${resourceId.videoId})`;
+    const label = `[${youtubeItemName(item)}](https://music.youtube.com/watch?v=${resourceId.videoId})`;
     const v = videos.get(resourceId.videoId);
-    if (!v || v.status.privacyStatus === 'private' || !['processed', 'uploaded'].includes(v.status.uploadStatus)) {
-      out.problems.push(`${label} is gone from YouTube (position ${position})`);
+    if (youtubeGone(v)) {
+      out.problems.push(`${label} is gone from YouTube (position ${item.snippet.position + 1})`);
       continue;
     }
-    const region = v.contentDetails.regionRestriction ?? {};
-    const off = countries.filter((c) => region.blocked?.includes(c) || (region.allowed && !region.allowed.includes(c)));
-    // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
+    const off = youtubeBlockedIn(v, countries);
     if (!off.length) continue;
+    // Say which kind of restriction it is, an allow list that leaves NL out reads differently from a block
+    const region = v.contentDetails.regionRestriction;
     const how = region.blocked?.includes(off[0]) ? `blocked in ${region.blocked.length} countries` : `allowed in only ${region.allowed.length}`;
-    const swap = channel && (await youtubeAlternative(title, channel.replace(/ - Topic$/, ''), resourceId.videoId));
+    const swap = channel && (await youtubeAlternative(title, channel.replace(/ - Topic$/, ''), resourceId.videoId, countries));
     const suggestion = swap
       ? `. Version that plays: [${swap.snippet.title}, from ${swap.snippet.channelTitle}](https://music.youtube.com/watch?v=${swap.id})`
       : '';
