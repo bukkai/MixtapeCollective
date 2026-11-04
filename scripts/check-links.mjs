@@ -242,8 +242,7 @@ let searchesLeft = 45;
 const plain = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
 // YouTube Music doesn't always swap in another version of a region-blocked song (King Gizzard
-// in NL, Nov 2026), so look for the same song by the same artist that does play. Topic channels
-// first, those are the plain audio versions YouTube Music treats as songs.
+// in NL, Nov 2026), so look for the same song by the same artist that does play.
 async function youtubeAlternative(title, artist, skip) {
   if (searchesLeft-- <= 0) return;
   // A suggestion is a bonus, so running out of quota halfway shouldn't fail the playlist
@@ -254,8 +253,13 @@ async function youtubeAlternative(title, artist, skip) {
   );
   if (!candidates.length) return;
   const page = await youtube('videos', { part: 'status,contentDetails,snippet', id: candidates.map((c) => c.id.videoId).join(',') }).catch(() => null);
-  const playable = (page?.items ?? []).filter(playsOnYoutube);
-  return playable.find((v) => v.snippet.channelTitle.endsWith(' - Topic')) ?? playable[0];
+  // The artist's own channel beats a stranger's re-upload, the exact title beats a live or remix
+  // version, and a Topic channel is the tiebreaker
+  const score = (v) =>
+    2 * plain(v.snippet.channelTitle).includes(plain(artist)) +
+    2 * (plain(v.snippet.title).replace(plain(artist), '').trim() === plain(title)) +
+    v.snippet.channelTitle.endsWith(' - Topic');
+  return (page?.items ?? []).filter(playsOnYoutube).sort((a, b) => score(b) - score(a))[0];
 }
 
 async function checkYoutube(id, out) {
