@@ -1,0 +1,40 @@
+name: Follower stats
+
+# Weekly snapshot of fans, followers and views per playlist, appended to stats/followers.csv.
+# Commits made with the workflow token don't trigger other workflows, so this doesn't redeploy the site.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stats
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run stats
+        # Spotify is skipped without a key
+        env:
+          SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
+          SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
+      - name: Commit snapshot
+        run: |
+          git diff --quiet stats/ && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898583+github-actions[bot]@users.noreply.github.com"
+          git add stats/
+          git commit -m "Follower stats for $(date -u +%F)"
+          git push
