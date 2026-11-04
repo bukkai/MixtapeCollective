@@ -10,7 +10,7 @@ artists:
   - "Black Flag"
   - "Bad Religion"
   - "Minor Threat"
-description: "Grip tape & bruises. Punk classics, deep cuts, early influences and new bands keeping it alive. Not a Tony Hawk playlist, but some THPS classics had to be in."
+description: "Punk rock and skate punk classics, deep cuts, early influences and modern bands keeping it alive. Not a Tony Hawk playlist, but some THPS classics had to be in."
 smartlink: https://sdz.sh/CwgJV4
 ---
 
