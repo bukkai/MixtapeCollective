@@ -12,7 +12,8 @@ The website uses approximate hex values from `src/data/palette.ts`. A playlist's
 | | Medium blue | `medium-blue` | post-rock |
 | | Light blue | `light-blue` | emotive math rock, shoegaze, jazzy instrumental math |
 | Complex and prog | Deep indigo | `deep-indigo` | prog metal, abrasive math rock, zeuhl, art rock |
-| Heavy | Dark maroon | `dark-maroon` | metal, nu-metal, protest hardcore, drone and doom |
+| Heavy | Dark maroon | `dark-maroon` | metal, nu-metal, drone and doom |
+| | Dark red | `dark-red` | protest music, crossover anger |
 | Punk | Yellow-green | `yellow-green` | punk, hardcore punk, riot grrrl, garage punk |
 | Electronic crossover | Bright yellow | `bright-yellow` | rave rock, big beat, dance-punk |
 | Warm psych | Bright orange | `bright-orange` | desert psych, stoner, microtonal psych, krautrock |

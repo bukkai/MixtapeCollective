@@ -45,7 +45,14 @@ export const palette = {
     hex: '#5c1a1f',
     deezer: '#711b1b',
     ink: 'light',
-    use: 'metal, nu-metal, protest hardcore, drone and doom',
+    use: 'metal, nu-metal, drone and doom',
+  },
+  'dark-red': {
+    name: 'Dark red',
+    hex: '#a3262a',
+    deezer: '#a02626',
+    ink: 'light',
+    use: 'protest music, crossover anger',
   },
   'dark-teal': {
     name: 'Dark teal',

@@ -2,7 +2,7 @@
 title: "Rage Against Authority"
 youtubeTitle: "Rage Against Authority | angry protest music (RATM, Ministry, Slayer, Refused)"
 genres: "Hardcore / thrash / industrial"
-color: dark-maroon
+color: dark-red
 status: published
 artists:
   - "Slayer"
