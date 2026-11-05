@@ -1,7 +1,7 @@
 ---
 title: "Untitled Post-Punk / Gothic"
 genres: "Post-punk / gothic rock"
-color: dark-teal
+color: black
 status: idea
 artists:
   - "The Cure"

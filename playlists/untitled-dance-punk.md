@@ -1,7 +1,7 @@
 ---
 title: "Untitled Dance-Punk"
 genres: "Dance-punk / post-punk revival / electro-punk"
-color: hot-pink
+color: bright-yellow
 status: idea
 artists:
   - "You Say Party We Say Die"

@@ -1,7 +1,7 @@
 ---
 title: "Rave Rock Uprising"
 genres: "Big beat / rave rock / electronic crossover"
-color: hot-pink
+color: bright-yellow
 status: idea
 artists:
   - "The Prodigy"

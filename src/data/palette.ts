@@ -1,7 +1,8 @@
 // The Mixtape Collective color set. Names match the Deezer cover editor.
 // `hex` is the website color. `deezer` is the exact swatch from the Deezer cover editor,
 // used for the cover border (scripts/covers.mjs).
-// Keep this tight: reuse an existing color before adding a new one.
+// Hue is the family, shade is the intensity: a new genre gets a shade of its family's hue
+// before it gets a hue of its own.
 
 export const palette = {
   'dark-blue': {
@@ -9,7 +10,14 @@ export const palette = {
     hex: '#22356b',
     deezer: '#1f2c99',
     ink: 'light',
-    use: 'grunge, alt rock, noise rock, post-rock, drone',
+    use: 'grunge, alt rock, noise rock, college rock',
+  },
+  'medium-blue': {
+    name: 'Medium blue',
+    hex: '#4a5fc4',
+    deezer: '#5262fc',
+    ink: 'light',
+    use: 'post-rock',
   },
   'light-blue': {
     name: 'Light blue',
@@ -37,28 +45,35 @@ export const palette = {
     hex: '#5c1a1f',
     deezer: '#711b1b',
     ink: 'light',
-    use: 'metal, hardcore, heavy stuff, proto-punk',
+    use: 'metal, nu-metal, protest hardcore, drone and doom',
   },
   'dark-teal': {
     name: 'Dark teal',
     hex: '#164e4f',
     deezer: '#135e6e',
     ink: 'light',
-    use: 'dark ambient, ritual electronics, post-punk, industrial',
+    use: 'dark ambient, industrial, EBM',
   },
   'medium-teal': {
     name: 'Medium teal',
     hex: '#2b8a86',
     deezer: '#32808f',
     ink: 'light',
-    use: 'reserved for Occult Office Musick',
+    use: 'ritual electronics, post-industrial',
   },
   'yellow-green': {
     name: 'Yellow-green',
     hex: '#a8c23a',
     deezer: '#a39a3a',
     ink: 'dark',
-    use: 'punk',
+    use: 'punk, hardcore punk, riot grrrl, garage punk',
+  },
+  'bright-yellow': {
+    name: 'Bright yellow',
+    hex: '#f2e14c',
+    deezer: '#fcff5f',
+    ink: 'dark',
+    use: 'rave rock, big beat, dance-punk',
   },
   'bright-orange': {
     name: 'Bright orange',
@@ -72,7 +87,7 @@ export const palette = {
     hex: '#e83e8c',
     deezer: '#de68e7',
     ink: 'dark',
-    use: 'psybient, electronic, dance-punk',
+    use: 'psybient, psy-dub',
   },
   'pale-lavender': {
     name: 'Pale lavender',
@@ -80,6 +95,13 @@ export const palette = {
     deezer: '#e9ccff',
     ink: 'dark',
     use: 'neo-psych, psych pop, dream pop',
+  },
+  black: {
+    name: 'Black',
+    hex: '#1c1b1a',
+    deezer: '#000000',
+    ink: 'light',
+    use: 'post-punk, gothic rock',
   },
 } as const;
 

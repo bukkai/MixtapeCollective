@@ -1,29 +1,27 @@
 # Color palette
 
-Every playlist cover uses one color from the Deezer cover editor. The set is kept tight on purpose: reuse an existing color before introducing a new one.
+Every playlist cover uses one color from the Deezer cover editor. Hue is the family, shade is the intensity: a new genre gets a shade of its family's hue (dark blue, medium blue, light blue) before it gets a hue of its own. Each color should mean one thing.
 
 The website uses approximate hex values from `src/data/palette.ts`. A playlist's `color` field must be one of the keys in that file, otherwise the build fails. Adding a color here means adding it there too.
 
 ## In use
 
-| Color | Key | Used for |
-|---|---|---|
-| Dark blue | `dark-blue` | grunge, alt rock, noise rock, college rock, post-rock, drone |
-| Light blue | `light-blue` | emotive math rock, shoegaze, jazzy instrumental math |
-| Deep indigo | `deep-indigo` | prog metal, abrasive math rock, zeuhl, art rock |
-| Dark purple | `dark-purple` | trip-hop |
-| Dark maroon | `dark-maroon` | metal, hardcore, heavy stuff, proto-punk |
-| Dark teal | `dark-teal` | dark ambient, post-industrial, ritual electronics, post-punk, industrial |
-| Yellow-green | `yellow-green` | punk, Dutch punk |
-| Bright orange | `bright-orange` | desert psych, stoner, microtonal psych, krautrock |
-| Hot pink | `hot-pink` | psybient, electronic, dance-punk, Dutch rap |
-| Pale lavender | `pale-lavender` | neo-psych, psych pop, dream pop |
-
-## Reserved
-
-| Color | Key | Reserved for |
-|---|---|---|
-| Medium teal | `medium-teal` | Occult Office Musick, do not reuse |
+| Family | Color | Key | Used for |
+|---|---|---|---|
+| Indie and alt guitar | Dark blue | `dark-blue` | grunge, alt rock, noise rock, college rock |
+| | Medium blue | `medium-blue` | post-rock |
+| | Light blue | `light-blue` | emotive math rock, shoegaze, jazzy instrumental math |
+| Complex and prog | Deep indigo | `deep-indigo` | prog metal, abrasive math rock, zeuhl, art rock |
+| Heavy | Dark maroon | `dark-maroon` | metal, nu-metal, protest hardcore, drone and doom |
+| Punk | Yellow-green | `yellow-green` | punk, hardcore punk, riot grrrl, garage punk |
+| Electronic crossover | Bright yellow | `bright-yellow` | rave rock, big beat, dance-punk |
+| Warm psych | Bright orange | `bright-orange` | desert psych, stoner, microtonal psych, krautrock |
+| Hazy psych | Pale lavender | `pale-lavender` | neo-psych, psych pop, dream pop |
+| Psychedelic electronic | Hot pink | `hot-pink` | psybient, psy-dub |
+| Downtempo | Dark purple | `dark-purple` | trip-hop |
+| Dark and ritual | Dark teal | `dark-teal` | dark ambient, industrial, EBM |
+| | Medium teal | `medium-teal` | ritual electronics, post-industrial |
+| Goth | Black | `black` | post-punk, gothic rock |
 
 ## Full Deezer set
 

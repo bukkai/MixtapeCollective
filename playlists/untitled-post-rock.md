@@ -1,7 +1,7 @@
 ---
 title: "Untitled Post-Rock"
 genres: "Post-rock"
-color: dark-blue
+color: medium-blue
 status: idea
 artists:
   - "Mogwai"

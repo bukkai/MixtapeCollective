@@ -1,7 +1,7 @@
 ---
 title: "Untitled Drone"
 genres: "Drone / doom"
-color: dark-blue
+color: dark-maroon
 status: idea
 artists:
   - "Sunn O)))"
