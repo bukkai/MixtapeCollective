@@ -38,7 +38,7 @@ export const palette = {
     hex: '#4a1f5c',
     deezer: '#7d3a81',
     ink: 'light',
-    use: 'trip-hop',
+    use: 'free, was trip-hop (retired)',
   },
   'dark-maroon': {
     name: 'Dark maroon',

@@ -19,7 +19,7 @@ The website uses approximate hex values from `src/data/palette.ts`. A playlist's
 | Warm psych | Bright orange | `bright-orange` | desert psych, stoner, microtonal psych, krautrock |
 | Hazy psych | Pale lavender | `pale-lavender` | neo-psych, psych pop, dream pop |
 | Psychedelic electronic | Hot pink | `hot-pink` | psybient, psy-dub |
-| Downtempo | Dark purple | `dark-purple` | trip-hop |
+| Free | Dark purple | `dark-purple` | free, was trip-hop (retired November 2026) |
 | Dark and ritual | Dark teal | `dark-teal` | dark ambient, industrial, EBM |
 | | Medium teal | `medium-teal` | ritual electronics, post-industrial |
 | Goth | Black | `black` | post-punk, gothic rock |
