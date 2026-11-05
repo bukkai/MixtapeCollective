@@ -26,6 +26,7 @@ import { parseArgs } from 'node:util';
 import { parse as parseYaml } from 'yaml';
 import {
   searchQuota,
+  sleep,
   smartlinkPlatforms,
   youtube,
   youtubeAlternative,
@@ -127,6 +128,21 @@ async function accessToken() {
 
 const auth = { token: await accessToken() };
 
+// YouTube answers 409 "The operation was aborted" (or a 5xx) when writes to one playlist come
+// in too fast. Nothing changed in that case, so wait a bit and try again.
+async function write(call) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const result = await call();
+      await sleep(1000);
+      return result;
+    } catch (e) {
+      if (attempt >= 4 || !(e.status === 409 || e.status >= 500)) throw e;
+      await sleep(2000 * attempt);
+    }
+  }
+}
+
 for (const slug of slugs) {
   const file = path.join(root, 'playlists', `${slug}.md`);
   if (!fs.existsSync(file)) {
@@ -186,12 +202,14 @@ for (const slug of slugs) {
   for (const { item, alt } of swaps) {
     const { position } = item.snippet;
     try {
-      await youtube('playlistItems', { part: 'snippet' }, {
-        ...auth,
-        method: 'POST',
-        body: { snippet: { playlistId: id, position, resourceId: { kind: 'youtube#video', videoId: alt.id } } },
-      });
-      await youtube('playlistItems', { id: item.id }, { ...auth, method: 'DELETE' });
+      await write(() =>
+        youtube('playlistItems', { part: 'snippet' }, {
+          ...auth,
+          method: 'POST',
+          body: { snippet: { playlistId: id, position, resourceId: { kind: 'youtube#video', videoId: alt.id } } },
+        }),
+      );
+      await write(() => youtube('playlistItems', { id: item.id }, { ...auth, method: 'DELETE' }));
       console.log(`  ✓ ${position + 1}. swapped`);
     } catch (e) {
       console.error(`  ✗ ${position + 1}. ${e.message}. Stopped here, the rest is untouched.`);

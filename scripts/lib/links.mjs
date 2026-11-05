@@ -41,7 +41,9 @@ export async function youtube(endpoint, params, { method = 'GET', body, token } 
   });
   if (res.status === 204) return {};
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`YouTube ${res.status}: ${data.error?.message ?? 'no details'}`);
+  if (!res.ok) {
+    throw Object.assign(new Error(`YouTube ${res.status}: ${data.error?.message ?? 'no details'}`), { status: res.status });
+  }
   return data;
 }
 
