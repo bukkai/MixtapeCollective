@@ -19,7 +19,6 @@ Copy any file in `playlists/`, rename it to a slug of the title and fill it in:
 ```yaml
 ---
 title: "Microtonal Madness"
-type: collection            # collection | era-retrospective
 genres: "Microtonal / psychedelic rock"
 color: bright-orange        # a key from src/data/palette.ts
 status: published           # idea | curating | published | retired

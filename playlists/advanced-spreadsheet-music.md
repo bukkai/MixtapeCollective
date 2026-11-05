@@ -1,6 +1,5 @@
 ---
 title: "Advanced Spreadsheet Music"
-type: collection
 genres: "Jazz-influenced instrumental / math rock"
 color: light-blue
 status: idea

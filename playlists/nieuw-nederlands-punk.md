@@ -1,7 +1,6 @@
 ---
 title: "Nieuw Nederlands Punk"
 youtubeTitle: "Nieuw Nederlands Punk | Nederpunk & Dutch hardcore (Hang Youth, Ploegendienst)"
-type: collection
 genres: "Punk"
 color: yellow-green
 status: published

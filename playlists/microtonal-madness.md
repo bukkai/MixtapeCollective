@@ -1,7 +1,6 @@
 ---
 title: "Microtonal Madness"
 youtubeTitle: "Microtonal Madness | microtonal psych rock (King Gizzard, Altın Gün, Mdou Moctar)"
-type: collection
 genres: "Microtonal / psychedelic rock"
 color: bright-orange
 status: published

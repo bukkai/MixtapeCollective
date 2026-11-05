@@ -1,7 +1,6 @@
 ---
 title: "Dark Mode Drift"
 youtubeTitle: "Dark Mode Drift | cyberpunk dark ambient, Blade Runner vibes"
-type: collection
 genres: "Dark ambient"
 color: dark-teal
 status: published

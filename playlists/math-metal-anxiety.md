@@ -1,7 +1,6 @@
 ---
 title: "Math Metal Anxiety"
 youtubeTitle: "Math Metal Anxiety | math metal & mathcore (Meshuggah, Dillinger Escape Plan, SikTh)"
-type: collection
 genres: "Math metal"
 color: dark-maroon
 status: published

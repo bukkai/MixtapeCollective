@@ -1,6 +1,5 @@
 ---
 title: "Untitled Proto-Punk"
-type: collection
 genres: "Proto-punk / garage rock / noise rock"
 color: dark-maroon
 status: idea

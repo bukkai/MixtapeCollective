@@ -13,7 +13,6 @@ const playlists = defineCollection({
     // Set by hand when publishing to YouTube: own name first, search terms after the pipe.
     // YouTube allows 150 characters, mobile search shows roughly the first 50 to 60.
     youtubeTitle: z.string().max(150).optional(),
-    type: z.enum(['collection', 'era-retrospective']),
     genres: z.string(),
     color: z.enum(colorKeys),
     status: z.enum(['idea', 'curating', 'published', 'retired']),

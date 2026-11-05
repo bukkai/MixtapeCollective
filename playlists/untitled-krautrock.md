@@ -1,6 +1,5 @@
 ---
 title: "Untitled Krautrock"
-type: collection
 genres: "Krautrock"
 color: bright-orange
 status: idea

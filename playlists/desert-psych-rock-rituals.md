@@ -1,7 +1,6 @@
 ---
 title: "Desert Psych Rock Rituals"
 youtubeTitle: "Desert Psych Rock Rituals | stoner & desert rock (Kyuss, QOTSA, Earthless)"
-type: collection
 genres: "Desert rock / stoner / psych"
 color: bright-orange
 status: published

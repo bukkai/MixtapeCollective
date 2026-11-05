@@ -1,7 +1,6 @@
 ---
 title: "Grip Tape & Bruises"
 youtubeTitle: "Grip Tape & Bruises | skate punk classics (Dead Kennedys, Black Flag, Bad Religion)"
-type: collection
 genres: "Punk rock"
 color: yellow-green
 status: published

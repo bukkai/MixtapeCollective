@@ -1,6 +1,5 @@
 ---
 title: "Untitled Art Rock"
-type: collection
 genres: "Art rock / prog rock"
 color: deep-indigo
 status: idea

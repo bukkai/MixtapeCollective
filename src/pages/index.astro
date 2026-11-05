@@ -14,20 +14,7 @@ const byShelf = (a: (typeof all)[number], b: (typeof all)[number]) =>
   colorKeys.indexOf(a.data.color) - colorKeys.indexOf(b.data.color) ||
   a.data.title.localeCompare(b.data.title);
 
-const sections = [
-  {
-    id: 'collections',
-    title: 'Collections',
-    blurb: 'Built around a sound or a mood. Each one has a start, a middle and an end.',
-    items: published.filter((p) => p.data.type === 'collection').sort(byShelf),
-  },
-  {
-    id: 'eras',
-    title: 'Era retrospectives',
-    blurb: 'The decades, trimmed down to what actually holds up.',
-    items: published.filter((p) => p.data.type === 'era-retrospective').sort(byShelf),
-  },
-].filter((s) => s.items.length);
+const shelf = [...published].sort(byShelf);
 
 const usedColors = colorKeys.filter((k) => published.some((p) => p.data.color === k));
 
@@ -79,17 +66,13 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     </header>
 
     <main>
-      {sections.map((s) => (
-        <section id={s.id}>
-          <h2>{s.title}</h2>
-          <p class="blurb">{s.blurb}</p>
-          <div class="shelf">
-            {s.items.map((p) => (
-              <Cassette playlist={p} />
-            ))}
-          </div>
-        </section>
-      ))}
+      <section>
+        <div class="shelf">
+          {shelf.map((p) => (
+            <Cassette playlist={p} />
+          ))}
+        </div>
+      </section>
     </main>
 
     <footer>
@@ -205,17 +188,6 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     padding: 28px 0 12px;
     border-top: 2px dashed rgba(29, 27, 24, 0.25);
     margin-top: 20px;
-  }
-  h2 {
-    font-family: var(--marker);
-    font-weight: 400;
-    font-size: 1.9rem;
-    margin: 0;
-  }
-  .blurb {
-    margin: 2px 0 26px;
-    color: var(--muted);
-    font-size: 0.9rem;
   }
   .shelf {
     display: grid;

@@ -1,6 +1,5 @@
 ---
 title: "Untitled Industrial"
-type: collection
 genres: "Industrial / EBM / post-industrial"
 color: dark-teal
 status: idea

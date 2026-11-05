@@ -1,7 +1,6 @@
 ---
 title: "Progressive Metal for Overthinkers"
 youtubeTitle: "Progressive Metal for Overthinkers | Opeth, Haken, Mastodon, Dream Theater"
-type: collection
 genres: "Progressive metal"
 color: deep-indigo
 status: published

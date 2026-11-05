@@ -1,7 +1,6 @@
 ---
 title: "Smells Like Grunge"
 youtubeTitle: "Smells Like Grunge | 90s grunge (Nirvana, Mudhoney, Soundgarden, Melvins)"
-type: era-retrospective
 genres: "Grunge"
 color: dark-blue
 status: published

@@ -1,6 +1,5 @@
 ---
 title: "Untitled Shoegaze"
-type: collection
 genres: "Shoegaze"
 color: light-blue
 status: idea

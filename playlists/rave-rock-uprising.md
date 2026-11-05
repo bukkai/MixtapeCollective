@@ -1,6 +1,5 @@
 ---
 title: "Rave Rock Uprising"
-type: collection
 genres: "Big beat / rave rock / electronic crossover"
 color: hot-pink
 status: idea

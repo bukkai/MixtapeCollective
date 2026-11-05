@@ -1,7 +1,6 @@
 ---
 title: "Two Minutes Hate"
 youtubeTitle: "Two Minutes Hate | 80s hardcore punk (Black Flag, Minor Threat, Bad Brains)"
-type: era-retrospective
 genres: "80s hardcore punk"
 color: yellow-green
 status: published

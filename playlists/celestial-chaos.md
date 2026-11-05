@@ -1,7 +1,6 @@
 ---
 title: "Celestial Chaos"
 youtubeTitle: "Celestial Chaos | Zeuhl & avant-prog (Magma, Koenjihyakkei, Univers Zero)"
-type: collection
 genres: "Zeuhl / Rock in Opposition / avant-prog"
 color: deep-indigo
 status: published

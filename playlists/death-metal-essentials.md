@@ -1,6 +1,5 @@
 ---
 title: "Death Metal Essentials"
-type: collection
 genres: "Death metal"
 color: dark-maroon
 status: idea

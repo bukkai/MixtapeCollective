@@ -1,6 +1,5 @@
 ---
 title: "Untitled Post-Punk / Gothic"
-type: collection
 genres: "Post-punk / gothic rock"
 color: dark-teal
 status: idea

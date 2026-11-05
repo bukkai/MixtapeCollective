@@ -1,7 +1,6 @@
 ---
 title: "Psy-Groove Sessions"
 youtubeTitle: "Psy-Groove Sessions | psy dub & psychedelic downtempo (Grouch, Ott, Desert Dwellers)"
-type: collection
 genres: "Psybient / psy-dub / downtempo"
 color: hot-pink
 status: published

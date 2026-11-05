@@ -1,7 +1,6 @@
 ---
 title: "Essential Trip-hop"
 youtubeTitle: "Essential Trip-hop | Portishead, Massive Attack, Tricky, Morcheeba"
-type: collection
 genres: "Trip-hop"
 color: dark-purple
 status: published
