@@ -72,7 +72,9 @@ function pathData(p) {
 
 // Text runs along the label's top and bottom edges and fills most of the band between them.
 // The side edges only set the width: torn or slanted ends shouldn't skew the lettering.
-function labelBox([tl, tr, br, bl]) {
+// `fill` is how much of the label's length the text may use. Tapes with a short label
+// raise it in blanks.json so the lettering doesn't come out tiny.
+function labelBox([tl, tr, br, bl], fill = 0.82) {
   const angleOf = (a, b) => Math.atan2(b[1] - a[1], b[0] - a[0]);
   const angle = (angleOf(tl, tr) + angleOf(bl, br)) / 2;
   const length = (Math.hypot(tr[0] - tl[0], tr[1] - tl[1]) + Math.hypot(br[0] - bl[0], br[1] - bl[1])) / 2;
@@ -82,7 +84,7 @@ function labelBox([tl, tr, br, bl]) {
   return {
     x: (tl[0] + tr[0] + br[0] + bl[0]) / 4,
     y: (tl[1] + tr[1] + br[1] + bl[1]) / 4,
-    width: length * 0.82,
+    width: length * fill,
     height: band * 0.68,
     angle: (angle * 180) / Math.PI,
   };
@@ -143,7 +145,7 @@ async function build(slug, data) {
 
   const labelled = await sharp(path.join(blanksDir, tape.file))
     .resize(SIZE, SIZE)
-    .composite([{ input: Buffer.from(labelSvg(text, opts.font ?? data.font ?? tape.font, labelBox(tape.corners), slug)), blend: 'multiply' }])
+    .composite([{ input: Buffer.from(labelSvg(text, opts.font ?? data.font ?? tape.font, labelBox(tape.corners, tape.fill), slug)), blend: 'multiply' }])
     .toBuffer();
 
   const framed = await sharp(labelled)

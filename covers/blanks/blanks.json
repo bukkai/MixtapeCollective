@@ -7,6 +7,7 @@
   "vhs-glitch": {
     "file": "vhs-glitch.jpg",
     "corners": [[173, 338], [702, 155], [746, 253], [204, 434]],
+    "fill": 0.93,
     "font": "marker"
   },
   "navy-dust": {
