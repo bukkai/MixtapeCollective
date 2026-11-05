@@ -30,7 +30,8 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Mixtape Collective</title>
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#16130f" />
     <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
     {pageUrl && <link rel="canonical" href={pageUrl} />}
 
@@ -88,26 +89,36 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
 
 <style is:global>
   :root {
+    --bg: #16130f;
+    --text: #e9e1cd;
+    --muted: #a59b86;
+    --rule: rgba(233, 225, 205, 0.18);
+    /* label paper, for anything that's meant to look stuck on */
     --paper: #ece5d3;
     --label: #f3eddd;
     --ink: #1d1b18;
-    --muted: #5d574c;
     --marker: 'Permanent Marker', 'Comic Sans MS', cursive;
     --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    /* dark specks, for paper */
     --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /* light specks, for the dark background */
+    --dust: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.9 0 0 0 0 0.8 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   * { box-sizing: border-box; }
-  html { background: var(--paper); }
+  html { background: var(--bg); }
   body {
     margin: 0;
     font-family: var(--mono);
-    color: var(--ink);
-    background: var(--paper) var(--grain);
+    color: var(--text);
+    background:
+      var(--dust),
+      radial-gradient(ellipse 120% 80% at 50% 0%, #2a241c 0%, transparent 60%),
+      var(--bg);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   a { color: inherit; }
-  a:focus-visible { outline: 2px dashed var(--ink); outline-offset: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px dashed var(--text); outline-offset: 3px; }
 </style>
 
 <style>
@@ -134,7 +145,8 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     padding: 14px 22px 10px;
     background: var(--label) var(--grain);
     transform: rotate(-1.6deg);
-    box-shadow: 0 8px 18px -12px rgba(20, 16, 10, 0.6);
+    color: var(--ink);
+    box-shadow: 0 14px 28px -14px rgba(0, 0, 0, 0.9);
     position: relative;
   }
   .masthead span::before {
@@ -184,7 +196,7 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
 
   section {
     padding: 28px 0 12px;
-    border-top: 2px dashed rgba(29, 27, 24, 0.25);
+    border-top: 2px dashed var(--rule);
     margin-top: 20px;
   }
   .shelf {
