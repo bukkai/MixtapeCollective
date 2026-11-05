@@ -1,6 +1,6 @@
 ---
-title: "Psychill / Psybient Ritual Rhythms"
-youtubeTitle: "Psychill / Psybient Ritual Rhythms | Shpongle, Ott, Desert Dwellers"
+title: "Third Eye, Half Closed"
+youtubeTitle: "Third Eye, Half Closed | psybient & psychill (Shpongle, Ott, Desert Dwellers)"
 genres: "Psybient / psychill"
 color: hot-pink
 status: published
