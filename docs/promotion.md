@@ -222,6 +222,28 @@ New name, tighter list. Best of 80s Punk is now Two Minutes Hate: 80s hardcore, 
 https://sdz.sh/LuZUih
 ```
 
+### Tue 10 Nov. Smells Like Grunge: Bluesky bump
+
+```
+New name, dirtier list. Best of 90s Grunge is now Smells Like Grunge: the big names up front, then down into Green River, Mudhoney, Tad and Melvins. Still ends on Black.
+
+https://sdz.sh/XGJctw
+```
+
+### Thu 12 Nov. Smells Like Grunge: bump, r/grunge (check)
+
+Expect someone to ask where Stone Temple Pilots went. Fair question: the answer is the post-grunge cut, and it's a good thread to stay in.
+
+```
+Gave my grunge playlist a proper rework
+
+It used to be a pretty standard 90s grunge best-of. Now it's called Smells Like Grunge and leans into the dirtier side: Nirvana, Alice in Chains, Soundgarden and Pearl Jam up front, then Green River, Mudhoney, Tad, Melvins, 7 Year Bitch and U-Men. Cut the post-grunge stuff to make room. Still ends on Black, some things you don't touch.
+
+Let me know what you think, or what I'm still missing.
+
+https://sdz.sh/XGJctw
+```
+
 ### Microtonal Madness: phase 3, general playlist sub
 
 ```
