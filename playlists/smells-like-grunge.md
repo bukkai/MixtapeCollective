@@ -13,8 +13,9 @@ artists:
   - "Screaming Trees"
 description: "Grunge before the radio cleaned it up. Seattle and its orbit, mid 80s to spring 94. The big ones up front, then down into the fuzz, sludge and feedback."
 smartlink: https://sdz.sh/XGJctw
-tape: navy-dust
-label: grunge
+tape: rusty-clear
+label: 90s grunge
+font: salt
 ---
 
 ## Rework (Nov 2026)
