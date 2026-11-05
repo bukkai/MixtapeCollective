@@ -10,7 +10,7 @@ artists:
   - "Linkin Park"
   - "Deftones"
   - "System of a Down"
-description: "Nu-metal at its peak, 1998 to 2001. Wallet chains, frosted tips and the world ending at midnight. It didn't, so here's Hybrid Theory again."
+description: "Wallet chains, frosted tips and the world ending at midnight. It didn't, so here's Hybrid Theory again. Features Slipknot, Korn, Linkin Park, Limp Bizkit."
 smartlink: https://sdz.sh/HgQVUu
 tape: vhs-glitch
 label: Y2K nu-metal
