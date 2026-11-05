@@ -23,6 +23,7 @@ const tilt = ((Math.abs(hash) % 31) - 15) / 10; // -1.5deg .. 1.5deg
 
 <article
   class="tape"
+  data-color={color}
   style={`--tilt:${tilt}deg; --band:${swatch.hex}; --band-ink:${swatch.ink === 'light' ? '#f4efe2' : '#1d1b18'}`}
 >
   {cover ? (
@@ -57,7 +58,7 @@ const tilt = ((Math.abs(hash) % 31) - 15) / 10; // -1.5deg .. 1.5deg
 <style>
   .tape {
     transform: rotate(var(--tilt));
-    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
   }
   .tape:hover,
   .tape:focus-within {

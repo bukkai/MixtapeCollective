@@ -54,19 +54,34 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
         shuffle off for this one.
       </p>
       <p class="count">{published.length} tapes on the shelf</p>
-      <ul class="legend" aria-label="Color key">
-        {usedColors.map((k) => (
-          <li>
-            <span class="dot" style={`background:${palette[k].hex}`}></span>
-            {palette[k].use}
-          </li>
-        ))}
-      </ul>
+      <div class="filters">
+        <ul class="chips" aria-label="Filter by color">
+          {usedColors.map((k) => (
+            <li>
+              <button
+                type="button"
+                class="chip"
+                data-color={k}
+                aria-pressed="false"
+                style={`--swatch:${palette[k].deezer}`}
+              >
+                <span class="swatch" aria-hidden="true"></span>
+                {palette[k].use}
+                <span class="n">{published.filter((p) => p.data.color === k).length}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <p class="status" aria-live="polite">
+          <span class="status-text"></span>
+          <button type="button" class="clear" hidden>clear</button>
+        </p>
+      </div>
     </header>
 
     <main>
       <section>
-        <div class="shelf">
+        <div class="shelf" id="shelf">
           {shelf.map((p) => (
             <Cassette playlist={p} />
           ))}
@@ -84,6 +99,47 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
         <li><a href="https://bsky.app/profile/mixtapecollective.bsky.social" rel="noopener">Bluesky</a></li>
       </ul>
     </footer>
+    <script>
+      const shelf = document.getElementById('shelf')!;
+      const tapes = [...shelf.querySelectorAll<HTMLElement>('.tape')];
+      const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+      const statusText = document.querySelector('.status-text')!;
+      const clear = document.querySelector<HTMLButtonElement>('.clear')!;
+
+      let color: string | null = null;
+
+      function apply() {
+        const active = color !== null;
+        let hits = 0;
+        for (const t of tapes) {
+          const match = !color || t.dataset.color === color;
+          if (active && match) hits++;
+          t.classList.toggle('dim', active && !match);
+        }
+        shelf.classList.toggle('filtering', active);
+        for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.color === color));
+        statusText.textContent = active ? `${hits} of ${tapes.length} tapes` : '';
+        clear.hidden = !active;
+        history.replaceState(null, '', color ? `#${color}` : location.pathname + location.search);
+      }
+
+      for (const c of chips) {
+        c.addEventListener('click', () => {
+          color = color === c.dataset.color ? null : c.dataset.color!;
+          apply();
+        });
+      }
+      clear.addEventListener('click', () => {
+        color = null;
+        apply();
+      });
+
+      const fromHash = location.hash.slice(1);
+      if (chips.some((c) => c.dataset.color === fromHash)) {
+        color = fromHash;
+        apply();
+      }
+    </script>
   </body>
 </html>
 
@@ -172,26 +228,73 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     font-size: 0.85rem;
   }
 
-  .legend {
+  .chips {
     list-style: none;
     padding: 0;
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 16px;
-    font-size: 0.72rem;
-    color: var(--muted);
+    gap: 8px;
   }
-  .legend li {
+  .chip {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    font: inherit;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    color: var(--text);
+    background: rgba(233, 225, 205, 0.04);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 6px 10px 6px 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
   }
-  .dot {
-    width: 11px;
-    height: 11px;
+  .chip:hover {
+    border-color: rgba(233, 225, 205, 0.45);
+    background-color: rgba(233, 225, 205, 0.08);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--label) var(--grain);
+    color: var(--ink);
+    border-color: var(--label);
+    transform: rotate(-1.2deg);
+    box-shadow: 0 6px 14px -8px rgba(0, 0, 0, 0.9);
+  }
+  .swatch {
+    width: 14px;
+    height: 14px;
     border-radius: 2px;
+    background: var(--swatch);
+    /* keeps black and very dark swatches visible */
+    box-shadow: 0 0 0 1px rgba(233, 225, 205, 0.3);
     flex: none;
+  }
+  .n {
+    color: var(--muted);
+    font-size: 0.7rem;
+  }
+  .chip[aria-pressed='true'] .n { color: #5d574c; }
+
+  .status {
+    min-height: 1.6em;
+    margin: 12px 0 0;
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+  }
+  .clear {
+    font: inherit;
+    color: var(--text);
+    background: none;
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
   }
 
   section {
@@ -201,8 +304,20 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
   }
   .shelf {
     display: grid;
+    align-items: start;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 40px 28px;
+  }
+
+  /* Matches stay up front at full strength, the rest steps back */
+  .shelf :global(.tape.dim) {
+    order: 1;
+    opacity: 0.22;
+    filter: grayscale(0.8);
+  }
+  .shelf :global(.tape.dim:hover),
+  .shelf :global(.tape.dim:focus-within) {
+    opacity: 0.6;
   }
 
   footer {
