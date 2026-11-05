@@ -54,6 +54,16 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
         shuffle off for this one.
       </p>
       <p class="count">{published.length} tapes on the shelf</p>
+      <div class="search">
+        <label for="q" class="visually-hidden">Search the shelf</label>
+        <input
+          id="q"
+          type="search"
+          placeholder="Search an artist, genre or tape"
+          autocomplete="off"
+          spellcheck="false"
+        />
+      </div>
       <div class="filters">
         <ul class="chips" aria-label="Filter by color">
           {usedColors.map((k) => (
@@ -103,25 +113,81 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
       const shelf = document.getElementById('shelf')!;
       const tapes = [...shelf.querySelectorAll<HTMLElement>('.tape')];
       const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+      const input = document.querySelector<HTMLInputElement>('#q')!;
       const statusText = document.querySelector('.status-text')!;
       const clear = document.querySelector<HTMLButtonElement>('.clear')!;
 
+      // Same folding as src/data/tracklists.ts, so "altin gun" finds Altın Gün
+      const fold = (s: string) =>
+        s
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/ı/g, 'i')
+          .replace(/ø/g, 'o')
+          .replace(/æ/g, 'ae')
+          .replace(/ß/g, 'ss');
+
+      const index = tapes.map((el) => {
+        const artists: string[] = JSON.parse(el.dataset.artists || '[]');
+        return {
+          el,
+          color: el.dataset.color,
+          text: el.dataset.text || '',
+          artists: artists.map((name) => ({ name, key: fold(name) })),
+          hit: el.querySelector<HTMLElement>('.hit')!,
+        };
+      });
+
       let color: string | null = null;
+      let q = '';
+
+      function showHits(hit: HTMLElement, names: string[]) {
+        hit.hidden = names.length === 0;
+        if (!names.length) return;
+        const shown = names.slice(0, 3);
+        hit.replaceChildren('On this tape: ');
+        shown.forEach((name, i) => {
+          if (i) hit.append(', ');
+          const b = document.createElement('b');
+          b.textContent = name;
+          hit.append(b);
+        });
+        if (names.length > shown.length) hit.append(` +${names.length - shown.length}`);
+      }
 
       function apply() {
-        const active = color !== null;
+        const active = color !== null || q.length > 0;
         let hits = 0;
-        for (const t of tapes) {
-          const match = !color || t.dataset.color === color;
+        for (const t of index) {
+          const artistHits = q ? t.artists.filter((a) => a.key.includes(q)).map((a) => a.name) : [];
+          const textMatch = !q || t.text.includes(q) || artistHits.length > 0;
+          const match = (!color || t.color === color) && textMatch;
           if (active && match) hits++;
-          t.classList.toggle('dim', active && !match);
+          t.el.classList.toggle('dim', active && !match);
+          showHits(t.hit, match ? artistHits : []);
         }
         shelf.classList.toggle('filtering', active);
         for (const c of chips) c.setAttribute('aria-pressed', String(c.dataset.color === color));
-        statusText.textContent = active ? `${hits} of ${tapes.length} tapes` : '';
+        statusText.textContent = !active
+          ? ''
+          : hits
+            ? `${hits} of ${tapes.length} tapes`
+            : `Nothing on the shelf for that yet.`;
         clear.hidden = !active;
-        history.replaceState(null, '', color ? `#${color}` : location.pathname + location.search);
+
+        const url = new URL(location.href);
+        if (q) url.searchParams.set('q', input.value.trim());
+        else url.searchParams.delete('q');
+        url.hash = color ? color : '';
+        history.replaceState(null, '', url.pathname + url.search + url.hash);
       }
+
+      input.addEventListener('input', () => {
+        const v = fold(input.value.trim());
+        q = v.length >= 2 ? v : '';
+        apply();
+      });
 
       for (const c of chips) {
         c.addEventListener('click', () => {
@@ -131,14 +197,21 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
       }
       clear.addEventListener('click', () => {
         color = null;
+        q = '';
+        input.value = '';
         apply();
       });
 
+      // Restore from a shared link: ?q=artist and/or #color
+      const params = new URLSearchParams(location.search);
       const fromHash = location.hash.slice(1);
-      if (chips.some((c) => c.dataset.color === fromHash)) {
-        color = fromHash;
-        apply();
+      if (chips.some((c) => c.dataset.color === fromHash)) color = fromHash;
+      if (params.get('q')) {
+        input.value = params.get('q')!;
+        const v = fold(input.value.trim());
+        q = v.length >= 2 ? v : '';
       }
+      if (color || q) apply();
     </script>
   </body>
 </html>
@@ -174,7 +247,7 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     -webkit-font-smoothing: antialiased;
   }
   a { color: inherit; }
-  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px dashed var(--text); outline-offset: 3px; }
+  a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px dashed var(--text); outline-offset: 3px; }
 </style>
 
 <style>
@@ -228,6 +301,49 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     font-size: 0.85rem;
   }
 
+  .search {
+    position: relative;
+    max-width: 520px;
+    margin: 4px 0 22px;
+    transform: rotate(-0.6deg);
+  }
+  .search::before {
+    /* masking tape */
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 22px;
+    width: 64px;
+    height: 20px;
+    background: rgba(226, 214, 176, 0.7);
+    transform: rotate(-4deg);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .search input {
+    width: 100%;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--ink);
+    background: var(--label) var(--grain);
+    border: 0;
+    border-radius: 2px;
+    padding: 13px 16px 11px;
+    box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.95);
+  }
+  .search input::placeholder { color: #7a7263; }
+  .search input:focus { outline: none; }
+  .search:focus-within { outline: 2px dashed var(--text); outline-offset: 4px; }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
   .chips {
     list-style: none;
     padding: 0;
@@ -243,6 +359,7 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     font: inherit;
     font-size: 0.75rem;
     line-height: 1.2;
+    text-align: left;
     color: var(--text);
     background: rgba(233, 225, 205, 0.04);
     border: 1px solid var(--rule);
@@ -276,6 +393,19 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     font-size: 0.7rem;
   }
   .chip[aria-pressed='true'] .n { color: #5d574c; }
+
+  /* Phones: one row you swipe through, so the tapes aren't pushed a screen down */
+  @media (max-width: 640px) {
+    .chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin: 0 -16px;
+      padding: 6px 16px 10px;
+      scrollbar-width: none;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip { white-space: nowrap; }
+  }
 
   .status {
     min-height: 1.6em;
