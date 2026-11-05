@@ -31,7 +31,7 @@ smartlink:
 12. ichikoro - Enemy
 13. Jizue - Rain Dog
 14. Mammal Hands - Kudu
-15. GoGo Penguin - Murmuration
+15. GoGo Penguin - Call to the Void
 16. Esbjorn Svensson Trio - Seven Days of Falling
 17. Yasei Collective - Uncle S
 18. toconoma - Open World
@@ -68,6 +68,7 @@ Swapped:
 - Tigran Hamasyan - A Eye (The Digital Leviathan), replaced by Ara Resurrected
 - DOMi & JD BECK - SOME THiNGS NEVER CHANGE!, replaced by GROWiNG OLDER!
 - bohemianvoodoo - Mystic, replaced by cardamom
+- GoGo Penguin - Murmuration, replaced by Call to the Void (newest album)
 
 ## Open
 
