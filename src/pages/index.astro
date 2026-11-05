@@ -9,10 +9,10 @@ import { palette, colorKeys } from '../data/palette';
 const all = await getCollection('playlists');
 const published = all.filter((p) => p.data.status === 'published');
 
-// Shelve tapes by color, then alphabetically
+// Alphabetical. Nu-metal waits at the end until it gets reworked like the other Best of lists.
+const last = new Set(['best-of-00s-nu-metal']);
 const byShelf = (a: (typeof all)[number], b: (typeof all)[number]) =>
-  colorKeys.indexOf(a.data.color) - colorKeys.indexOf(b.data.color) ||
-  a.data.title.localeCompare(b.data.title);
+  Number(last.has(a.id)) - Number(last.has(b.id)) || a.data.title.localeCompare(b.data.title);
 
 const shelf = [...published].sort(byShelf);
 
