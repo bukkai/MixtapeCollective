@@ -9,10 +9,8 @@ import { palette, colorKeys } from '../data/palette';
 const all = await getCollection('playlists');
 const published = all.filter((p) => p.data.status === 'published');
 
-// Alphabetical. Nu-metal waits at the end until it gets reworked like the other Best of lists.
-const last = new Set(['best-of-00s-nu-metal']);
-const byShelf = (a: (typeof all)[number], b: (typeof all)[number]) =>
-  Number(last.has(a.id)) - Number(last.has(b.id)) || a.data.title.localeCompare(b.data.title);
+// Alphabetical
+const byShelf = (a: (typeof all)[number], b: (typeof all)[number]) => a.data.title.localeCompare(b.data.title);
 
 const shelf = [...published].sort(byShelf);
 

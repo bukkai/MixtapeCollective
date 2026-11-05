@@ -12,7 +12,7 @@ Working list of bigger changes. Tick things off as they land.
   - [x] 80s Punk → Two Minutes Hate (80s hardcore, nothing over 2:15)
   - [ ] 90s Grunge → absorb the Smells Like Grunge idea
   - [ ] 90s Alt Rock → the comedown
-  - [ ] 00s Nu Metal → own the nostalgia
+  - [x] 00s Nu Metal → Millennium Bug (nu-metal released 1998 to 2001)
 - [ ] **Consistent naming.** Rename playlists where the title style doesn't match the rest of the shelf.
 - [ ] **Rewrite descriptions.** Make them sound like a friend handing you a tape, not like AI slop.
 
