@@ -9,6 +9,6 @@ artists:
   - "Tricky"
   - "Massive Attack"
   - "Portishead"
-description: "Trip-hop from the source. Downtempo soul, sample worship, and smoke-filled rooms. Morcheeba, Tricky, Portishead and many more."
+description: "Trip-hop for when it's been raining since Tuesday. Heavy breaks, sad samples, smoke-filled rooms. Portishead, Massive Attack, Tricky, Morcheeba and more."
 smartlink: https://sdz.sh/MyotVF
 ---
