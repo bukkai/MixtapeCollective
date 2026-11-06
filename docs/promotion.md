@@ -172,20 +172,6 @@ New tape: [Playlist name]. [One-line hook.] [Artist A], [Artist B], [Artist C] a
 
 Filled-in posts, ready to go. Move a post to the log once it's up. Write these during bursts so quiet months are copy and paste.
 
-### Fri 6 Nov. Neo-Psych Chill: phase 1b, r/TameImpala
-
-Only credit r/psychedelicrock if that thread actually gave you something.
-
-```
-Hope it's okay to share! I made a hazy neo-psych playlist
-
-[Hook: when you got into Tame Impala / Khruangbin.] I started with them and Unknown Mortal Orchestra and worked from there. Have to say I discovered quite some fun bands along the way, DOOM GONG and The Mysterons especially.
-
-Big thanks to r/psychedelicrock for the extra recommendations!
-
-https://sdz.sh/auNq9M
-```
-
 ### Sun 8 Nov. Two Minutes Hate: Bluesky bump
 
 ```
@@ -194,18 +180,18 @@ New name, tighter list. Best of 80s Punk is now Two Minutes Hate: 80s hardcore, 
 https://sdz.sh/LuZUih
 ```
 
-### Mon 9 Nov. Neo-Psych Chill: phase 2, r/mildhighclub or r/UnknownMortalOrchestra (check)
+### Mon 9 Nov. Neo-Psych Chill: phase 1b, r/Khruangbin
 
-Written for r/mildhighclub. For r/UnknownMortalOrchestra: swap the name and use Hunnybee and Multi-Love as the two tracks.
+The r/TameImpala post on the 6th was a recs ask, so this is the share. Only thank the subs that actually gave you something, and if a rec made it onto the list, name it.
 
 ```
-Hope you guys don't mind the self-promo. Big fan of Mild High Club here, so I thought you might appreciate this. I put together a hazy neo-psych playlist that Skiptracing and Windowpane fit right into imo.
+Hope it's okay to share! I made a hazy neo-psych playlist
 
-If you like the jazzy, wobbly side of MHC, there might be a couple bands in there worth a listen. Homeshake, Drugdealer, Men I Trust and Allah-Las, plus DOOM GONG and The Mysterons if you want something you probably haven't heard yet.
+[Hook: when you got into Khruangbin.] I started with A Hymn and Lady and Man, plus Tame Impala and Unknown Mortal Orchestra, and worked from there. Have to say I discovered quite some fun bands along the way, DOOM GONG and The Mysterons especially.
+
+Big thanks to r/TameImpala for the recommendations!
 
 https://sdz.sh/auNq9M
-
-(If you like it a bit heavier and dustier, check my profile, I have a desert psych one too)
 ```
 
 ### Tue 10 Nov. Smells Like Grunge: Bluesky bump
@@ -214,18 +200,6 @@ https://sdz.sh/auNq9M
 New name, dirtier list. Best of 90s Grunge is now Smells Like Grunge: the big names up front, then down into Green River, Mudhoney, Tad and Melvins. Still ends on Black.
 
 https://sdz.sh/XGJctw
-```
-
-### Wed 11 Nov. Microtonal Madness: phase 2, r/altingun (check)
-
-No tuning claims about the other acts, just "fits next to it". If the sub doesn't exist or is dead, the same post works for a Mdou Moctar or Horse Lords sub: swap the name and the two tracks.
-
-```
-Hope you guys don't mind the self-promo. Big fan of Altın Gün here, so I thought you might appreciate this. I put together a microtonal psych rock playlist and Kalk Gidelim and Kesik Çayır fit right into it imo.
-
-If you like the Anatolian side of Altın Gün, there might be a couple bands in there worth a listen: Compro Oro, Taxi Kebab, Ko Shin Moon and Mdou Moctar, next to the King Gizzard microtonal trilogy and Angine de Poitrine.
-
-https://sdz.sh/fDYx9P
 ```
 
 ### Thu 12 Nov. Smells Like Grunge: bump, r/grunge (check)
@@ -282,6 +256,7 @@ Newest first. Earlier posts have no date on record.
 
 | Date | Where | Playlist | Phase | Link |
 | --- | --- | --- | --- | --- |
+| 2026-11-06 | r/TameImpala | Neo-Psych Chill (recs ask, list already done) | 0 | (thread link not recorded) |
 | 2026-11-05 | r/mathrock | Advanced Spreadsheet Music (recs thread) | 0 | https://www.reddit.com/r/mathrock/comments/1xoem15/looking_for_jazzypiano_math_rock_recommendations/ |
 | 2026-11-04 | Bluesky | Neo-Psych Chill | launch | https://sdz.sh/auNq9M |
 | 2026-11-04 | r/psychedelicrock | Neo-Psych Chill | 1 | https://sdz.sh/auNq9M |

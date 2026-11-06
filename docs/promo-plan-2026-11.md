@@ -24,7 +24,7 @@ Sub names marked (check) are guesses: verify they exist and allow self-promo.
 | Wed 4 | Neo-Psych Chill | r/psychedelicrock | 1 |
 | Wed 4 | Neo-Psych Chill | Bluesky | launch |
 | Thu 5 | Advanced Spreadsheet Music | r/mathrock: recs thread for jazzy math rock (GoGo Penguin, Mouse on the Keys, Dans Dans) | 0 (done) |
-| Fri 6 | Neo-Psych Chill | r/TameImpala | 1b |
+| Fri 6 | Neo-Psych Chill | r/TameImpala, posted as a recs ask (done) | 0 |
 | Sat 7 | (dropped) | r/xenharmonic doesn't exist and r/microtonal already had it on the 3rd | |
 | Sun 8 | (rest) | Bluesky: bump Two Minutes Hate (new name) | bump |
 
@@ -34,9 +34,9 @@ Lighter week. Use the space to finish ASM with whatever the recs thread brings i
 
 | Day | Playlist | Where | Phase |
 | --- | --- | --- | --- |
-| Mon 9 | Neo-Psych Chill | r/mildhighclub or r/UnknownMortalOrchestra (check). Draft in the queue | 2 |
+| Mon 9 | Neo-Psych Chill | r/Khruangbin, the share after the r/TameImpala recs ask. Draft in the queue | 1b |
 | Tue 10 | Smells Like Grunge | Bluesky (new name, two days after the TMH bump) | bump |
-| Wed 11 | Microtonal Madness | r/altingun (check), first adjacent sub now that Sat 7 is gone. Draft in the queue | 2 |
+| Wed 11 | (free) | Microtonal rests until r/playlist on the 18th. Artist subs left are too small (r/altingun about 63 visitors a week) | |
 | Thu 12 | Smells Like Grunge | r/grunge (check self-promo rules). Draft in the queue | bump |
 | Fri 13 | Two Minutes Hate | r/punk. Draft in the queue | bump |
 | Sat 14 / Sun 15 | (rest) | reply to comments, organic activity | |
