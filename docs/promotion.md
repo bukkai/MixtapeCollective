@@ -172,21 +172,9 @@ New tape: [Playlist name]. [One-line hook.] [Artist A], [Artist B], [Artist C] a
 
 Filled-in posts, ready to go. Move a post to the log once it's up. Write these during bursts so quiet months are copy and paste.
 
-### Thu 5 Nov. Advanced Spreadsheet Music: phase 0, r/mathrock
+### Fri 6 Nov. Neo-Psych Chill: phase 1b, r/TameImpala
 
-Leaves out Jizue and Paranoid Void on purpose, so they can come up as recs or be the surprise later.
-
-```
-Looking for jazzy, piano-driven math rock recommendations
-
-I've been into GoGo Penguin, Mouse on the Keys and Dans Dans for [a while / years], and [hook: what got you into the jazzier side]. I'm putting together a playlist around that sound: piano, jazz chords, odd time signatures, but still a band that hits.
-
-Bonus points for newer or lesser known stuff. What should be on it?
-```
-
-### Fri 6 Nov. Neo-Psych Chill: phase 1b, r/TameImpala or r/Khruangbin
-
-Swap the artist name for whichever sub you pick. Only credit r/psychedelicrock if that thread actually gave you something.
+Only credit r/psychedelicrock if that thread actually gave you something.
 
 ```
 Hope it's okay to share! I made a hazy neo-psych playlist
@@ -198,22 +186,6 @@ Big thanks to r/psychedelicrock for the extra recommendations!
 https://sdz.sh/auNq9M
 ```
 
-### Sat 7 Nov. Microtonal Madness: phase 2, r/xenharmonic (check)
-
-Theory-heavy crowd. Only name a tuning if it's verified (Xenharmonic Wiki, interviews, album notes), otherwise leave it out.
-
-```
-I made a microtonal playlist, but it's mostly psych rock
-
-Probably not the most theory-heavy list this sub has seen, but I figured some of you might enjoy it. It started with the King Gizzard microtonal trilogy and Angine de Poitrine, and grew from there with help from r/KGATLW and r/microtonal. Altin Gün, Mdou Moctar, Frankie and the Witch Fingers and a few lesser known acts.
-
-[Optional: one verified line on the tunings in there.]
-
-Curious what I'm missing, especially newer bands doing this with guitars.
-
-https://sdz.sh/fDYx9P
-```
-
 ### Sun 8 Nov. Two Minutes Hate: Bluesky bump
 
 ```
@@ -222,12 +194,38 @@ New name, tighter list. Best of 80s Punk is now Two Minutes Hate: 80s hardcore, 
 https://sdz.sh/LuZUih
 ```
 
+### Mon 9 Nov. Neo-Psych Chill: phase 2, r/mildhighclub or r/UnknownMortalOrchestra (check)
+
+Written for r/mildhighclub. For r/UnknownMortalOrchestra: swap the name and use Hunnybee and Multi-Love as the two tracks.
+
+```
+Hope you guys don't mind the self-promo. Big fan of Mild High Club here, so I thought you might appreciate this. I put together a hazy neo-psych playlist that Skiptracing and Windowpane fit right into imo.
+
+If you like the jazzy, wobbly side of MHC, there might be a couple bands in there worth a listen. Homeshake, Drugdealer, Men I Trust and Allah-Las, plus DOOM GONG and The Mysterons if you want something you probably haven't heard yet.
+
+https://sdz.sh/auNq9M
+
+(If you like it a bit heavier and dustier, check my profile, I have a desert psych one too)
+```
+
 ### Tue 10 Nov. Smells Like Grunge: Bluesky bump
 
 ```
 New name, dirtier list. Best of 90s Grunge is now Smells Like Grunge: the big names up front, then down into Green River, Mudhoney, Tad and Melvins. Still ends on Black.
 
 https://sdz.sh/XGJctw
+```
+
+### Wed 11 Nov. Microtonal Madness: phase 2, r/altingun (check)
+
+No tuning claims about the other acts, just "fits next to it". If the sub doesn't exist or is dead, the same post works for a Mdou Moctar or Horse Lords sub: swap the name and the two tracks.
+
+```
+Hope you guys don't mind the self-promo. Big fan of Altın Gün here, so I thought you might appreciate this. I put together a microtonal psych rock playlist and Kalk Gidelim and Kesik Çayır fit right into it imo.
+
+If you like the Anatolian side of Altın Gün, there might be a couple bands in there worth a listen: Compro Oro, Taxi Kebab, Ko Shin Moon and Mdou Moctar, next to the King Gizzard microtonal trilogy and Angine de Poitrine.
+
+https://sdz.sh/fDYx9P
 ```
 
 ### Thu 12 Nov. Smells Like Grunge: bump, r/grunge (check)
@@ -242,6 +240,20 @@ It used to be a pretty standard 90s grunge best-of. Now it's called Smells Like 
 Let me know what you think, or what I'm still missing.
 
 https://sdz.sh/XGJctw
+```
+
+### Fri 13 Nov. Two Minutes Hate: bump, r/punk
+
+Expect someone to ask where Rise Above or Institutionalized went. They're on Grip Tape & Bruises, so this is a good thread to stay in and mention that one.
+
+```
+Gave my 80s punk playlist a proper rework
+
+It used to be a pretty standard 80s punk best-of. Now it's called Two Minutes Hate and it's 80s hardcore only, nothing over 2:15. Black Flag, Minor Threat, Bad Brains and Dead Kennedys up front, then out through D.O.A., Subhumans, Die Kreuzen, Negative Approach and Poison Idea, speeding up into Siege. Ends on Sailin' On and Can I Say. 30 tracks, 47 minutes.
+
+Let me know what you think, or what I'm still missing.
+
+https://sdz.sh/LuZUih
 ```
 
 ### Microtonal Madness: phase 3, general playlist sub
@@ -270,6 +282,7 @@ Newest first. Earlier posts have no date on record.
 
 | Date | Where | Playlist | Phase | Link |
 | --- | --- | --- | --- | --- |
+| 2026-11-05 | r/mathrock | Advanced Spreadsheet Music (recs thread) | 0 | https://www.reddit.com/r/mathrock/comments/1xoem15/looking_for_jazzypiano_math_rock_recommendations/ |
 | 2026-11-04 | Bluesky | Neo-Psych Chill | launch | https://sdz.sh/auNq9M |
 | 2026-11-04 | r/psychedelicrock | Neo-Psych Chill | 1 | https://sdz.sh/auNq9M |
 | 2026-11-03 | r/microtonal | Microtonal Madness | 1b | https://sdz.sh/fDYx9P |
