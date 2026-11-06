@@ -256,7 +256,7 @@ Newest first. Earlier posts have no date on record.
 
 | Date | Where | Playlist | Phase | Link |
 | --- | --- | --- | --- | --- |
-| 2026-11-06 | r/TameImpala | Neo-Psych Chill (recs ask, list already done) | 0 | (thread link not recorded) |
+| 2026-11-06 | r/TameImpala | Neo-Psych Chill (recs ask, list already done) | 0 | https://www.reddit.com/r/TameImpala/comments/1xpbs5i/suggestions_for_my_tame_impale_inspired_psych/ |
 | 2026-11-05 | r/mathrock | Advanced Spreadsheet Music (recs thread) | 0 | https://www.reddit.com/r/mathrock/comments/1xoem15/looking_for_jazzypiano_math_rock_recommendations/ |
 | 2026-11-04 | Bluesky | Neo-Psych Chill | launch | https://sdz.sh/auNq9M |
 | 2026-11-04 | r/psychedelicrock | Neo-Psych Chill | 1 | https://sdz.sh/auNq9M |
