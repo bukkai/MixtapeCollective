@@ -68,7 +68,14 @@ const tilt = ((Math.abs(hash) % 31) - 15) / 10; // -1.5deg .. 1.5deg
       </details>
     )}
     {smartlink && (
-      <a class="listen" href={smartlink} rel="noopener" target="_blank">Listen</a>
+      <a
+        class="listen"
+        href={smartlink}
+        rel="noopener"
+        target="_blank"
+        data-goatcounter-click={`listen/${playlist.id}`}
+        data-goatcounter-title={`Listen: ${title}`}
+      >Listen</a>
     )}
   </div>
 </article>

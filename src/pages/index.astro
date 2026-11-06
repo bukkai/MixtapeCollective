@@ -5,6 +5,7 @@ import '@fontsource/ibm-plex-mono/600.css';
 import { getCollection } from 'astro:content';
 import Cassette from '../components/Cassette.astro';
 import { palette, colorKeys } from '../data/palette';
+import { goatcounterCode } from '../data/analytics';
 
 const all = await getCollection('playlists');
 const published = all.filter((p) => p.data.status === 'published');
@@ -20,6 +21,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const description = 'Playlists made like mixtapes. Sequenced to be played front to back.';
 // Social previews need absolute URLs; Astro.site is set by the deploy workflow
 const pageUrl = Astro.site ? new URL(`${base}/`, Astro.site).href : undefined;
+const goatcounter = import.meta.env.PROD && goatcounterCode ? `https://${goatcounterCode}.goatcounter.com/count` : undefined;
 const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${base}/og.png`;
 ---
 
@@ -45,6 +47,7 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="A cassette labeled Mixtape Collective in handwriting" />
     <meta name="twitter:card" content="summary_large_image" />
+    {goatcounter && <script is:inline async data-goatcounter={goatcounter} src="https://gc.zgo.at/count.js"></script>}
   </head>
   <body>
     <header>
@@ -102,11 +105,11 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     <footer>
       <p>Curated on Deezer, shared everywhere else.</p>
       <ul>
-        <li><a href="https://www.deezer.com/profile/6714836221" rel="noopener">Deezer</a></li>
-        <li><a href="https://open.spotify.com/user/litso/playlists" rel="noopener">Spotify</a></li>
-        <li><a href="https://music.youtube.com/@MixtapeCollectivePlaylists" rel="noopener">YouTube</a></li>
-        <li><a href="https://www.reddit.com/user/MixtapeCollective" rel="noopener">Reddit</a></li>
-        <li><a href="https://bsky.app/profile/mixtapecollective.bsky.social" rel="noopener">Bluesky</a></li>
+        <li><a href="https://www.deezer.com/profile/6714836221" rel="noopener" data-goatcounter-click="social/deezer" data-goatcounter-title="Deezer">Deezer</a></li>
+        <li><a href="https://open.spotify.com/user/litso/playlists" rel="noopener" data-goatcounter-click="social/spotify" data-goatcounter-title="Spotify">Spotify</a></li>
+        <li><a href="https://music.youtube.com/@MixtapeCollectivePlaylists" rel="noopener" data-goatcounter-click="social/youtube" data-goatcounter-title="YouTube">YouTube</a></li>
+        <li><a href="https://www.reddit.com/user/MixtapeCollective" rel="noopener" data-goatcounter-click="social/reddit" data-goatcounter-title="Reddit">Reddit</a></li>
+        <li><a href="https://bsky.app/profile/mixtapecollective.bsky.social" rel="noopener" data-goatcounter-click="social/bluesky" data-goatcounter-title="Bluesky">Bluesky</a></li>
       </ul>
     </footer>
     <script>
