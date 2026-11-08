@@ -26,7 +26,7 @@ Sub names marked (check) are guesses: verify they exist and allow self-promo.
 | Thu 5 | Advanced Spreadsheet Music | r/mathrock: recs thread for jazzy math rock (GoGo Penguin, Mouse on the Keys, Dans Dans) | 0 (done) |
 | Fri 6 | Neo-Psych Chill | r/TameImpala, posted as a recs ask (done) | 0 |
 | Sat 7 | (dropped) | r/xenharmonic doesn't exist and r/microtonal already had it on the 3rd | |
-| Sun 8 | (rest) | Bluesky: bump Two Minutes Hate (new name) | bump |
+| Sun 8 | (rest) | Bluesky: bump Two Minutes Hate (new name) | bump (done) |
 
 ## Week 46 (9 to 15 Nov)
 
