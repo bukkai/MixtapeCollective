@@ -103,6 +103,9 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     </main>
 
     <footer>
+      <p class="kofi">
+        Enjoying the tapes? You can <a href="https://ko-fi.com/hegmus" rel="noopener" data-goatcounter-click="support/kofi" data-goatcounter-title="Ko-fi">buy me a coffee on Ko-fi</a>.
+      </p>
       <p>Curated on Deezer, shared everywhere else.</p>
       <ul>
         <li><a href="https://www.deezer.com/profile/6714836221" rel="noopener" data-goatcounter-click="social/deezer" data-goatcounter-title="Deezer">Deezer</a></li>
@@ -460,6 +463,11 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
     color: var(--muted);
   }
   footer p { margin: 0 0 8px; }
+  footer .kofi {
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    color: var(--text);
+  }
   footer ul {
     list-style: none;
     padding: 0;
