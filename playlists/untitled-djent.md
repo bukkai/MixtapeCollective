@@ -32,8 +32,10 @@ Starter set, 11 tracks. Landing is still weak, Physical Education is a placehold
 6. Vildhjarta - Dagger
 7. Uneven Structure - Awaken
 8. TesseracT - Nocturne
-9. Periphery - Scarlet
+9. Periphery - Make Total Destroy
 10. Meshuggah - Rational Gaze
 11. Animals as Leaders - Physical Education
 
 To check on Deezer: Vildhjarta - Dagger and Uneven Structure - Awaken (titles from memory, not verified).
+
+Cut: Periphery - Scarlet (not available on Deezer).
