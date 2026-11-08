@@ -8,9 +8,10 @@
     "preview": "astro preview",
     "check": "astro check",
     "covers": "node scripts/covers.mjs",
-    "check:links": "node scripts/check-links.mjs",
-    "stats": "node scripts/stats.mjs",
-    "fix:youtube": "node scripts/fix-youtube.mjs"
+    "check:links": "node --env-file-if-exists=.secrets/.env scripts/check-links.mjs",
+    "stats": "node --env-file-if-exists=.secrets/.env scripts/stats.mjs",
+    "fix:youtube": "node scripts/fix-youtube.mjs",
+    "login:spotify": "node --env-file-if-exists=.secrets/.env scripts/spotify-login.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",

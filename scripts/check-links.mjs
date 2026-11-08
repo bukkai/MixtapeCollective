@@ -7,8 +7,8 @@
 //   npm run check:links -- --report report.md   also write the report as Markdown
 //
 // Deezer needs no key. YouTube needs YOUTUBE_API_KEY and is skipped without it. Spotify checks
-// every track with SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, and without them only whether
-// the playlist exists and how many tracks it has. The report says which ran.
+// every track with SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET and a login (see scripts/lib/spotify.mjs),
+// and without them only whether the playlist exists and how many tracks it has. The report says which ran.
 //
 // Exits with 1 when something needs attention, so CI can act on it.
 // Tracks Deezer's API calls dead don't count while Deezer probably still plays them: the same
@@ -34,6 +34,7 @@ import {
   youtubePlaylist,
   youtubeVideos,
 } from './lib/links.mjs';
+import { spotify, spotifyKeys } from './lib/spotify.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 
@@ -48,7 +49,8 @@ const { values: opts, positionals: slugs } = parseArgs({
 const countries = opts.country.split(',').map((c) => c.trim().toUpperCase());
 const env = process.env;
 const keys = {
-  spotify: env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET,
+  // Reading tracks needs a logged-in user since February 2026, see scripts/lib/spotify.mjs
+  spotify: spotifyKeys.user,
   youtube: env.YOUTUBE_API_KEY,
 };
 
@@ -68,34 +70,6 @@ async function deezer(url, attempt = 1) {
   if (data && data.error?.code !== 4) return data;
   await sleep(5000 * attempt);
   return deezer(url, attempt + 1);
-}
-
-// Client credentials are enough for public playlists. The token lasts an hour, a run takes minutes.
-let spotifyToken;
-async function spotify(url) {
-  if (!spotifyToken) {
-    const res = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(`Spotify login failed: ${data.error_description ?? data.error ?? res.status}`);
-    spotifyToken = data.access_token;
-  }
-  const res = await fetch(url.startsWith('https:') ? url : `https://api.spotify.com/v1${url}`, {
-    headers: { Authorization: `Bearer ${spotifyToken}` },
-  });
-  if (res.status === 429) {
-    await sleep((Number(res.headers.get('retry-after')) || 5) * 1000);
-    return spotify(url);
-  }
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`Spotify ${res.status}: ${data.error?.message ?? 'no details'}`);
-  return data;
 }
 
 async function deezerTracks(id) {
@@ -170,20 +144,24 @@ async function checkDeezer(id, out) {
 
 // With a market, Spotify relinks dead ids to a playable copy by itself and only reports
 // is_playable false when there's really nothing to play. A removed track comes back as null.
+// Since the February 2026 API changes /tracks answers 403 and the playlist lives at /items,
+// with each entry under `item` instead of `track`. Both are asked for in case of a mixed rollout.
 async function checkSpotify(id, out) {
   const blocked = new Map();
   let removed = 0;
+  const fields = 'name,is_playable,restrictions,artists(name)';
   for (const market of countries) {
     const items = [];
-    let url = `/playlists/${id}/tracks?market=${market}&limit=100&fields=next,items(is_local,track(name,is_playable,restrictions,artists(name)))`;
+    let url = `/playlists/${id}/items?market=${market}&limit=100&fields=next,items(is_local,item(${fields}),track(${fields}))`;
     while (url) {
       const page = await spotify(url);
       items.push(...page.items);
       url = page.next;
     }
     out.counts.Spotify = items.length;
-    removed = items.filter((i) => !i.track).length;
-    for (const { is_local, track: t } of items) {
+    const entries = items.map((i) => ({ is_local: i.is_local, t: i.item ?? i.track }));
+    removed = entries.filter((e) => !e.t).length;
+    for (const { is_local, t } of entries) {
       if (is_local || !t || t.is_playable !== false) continue;
       const reason = t.restrictions?.reason ? ` (${t.restrictions.reason})` : '';
       const label = `"${t.name}" by ${t.artists.map((a) => a.name).join(', ')}${reason}`;
@@ -275,7 +253,9 @@ const files = fs
 
 const checked = [
   'Deezer',
-  keys.spotify ? 'Spotify' : 'Spotify (playlist and track count only, no key)',
+  keys.spotify
+    ? 'Spotify'
+    : `Spotify (playlist and track count only, ${spotifyKeys.app ? 'no login, run npm run login:spotify' : 'no key'})`,
   keys.youtube ? 'YouTube' : 'YouTube skipped (no key)',
 ];
 console.log(`Checking ${checked.join(', ')}\n`);

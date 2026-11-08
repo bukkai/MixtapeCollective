@@ -7,7 +7,8 @@
 //
 // What each platform gives us:
 //   Deezer   fans, from the public API, no key needed
-//   Spotify  followers (saves), needs SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, skipped without
+//   Spotify  followers (saves), needs SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET, skipped without.
+//            Uses the login from npm run login:spotify when there is one, see scripts/lib/spotify.mjs
 //   YouTube  playlist views, read from the playlist page. Playlists have no subscribers on YouTube
 //            and the Data API doesn't expose views, so the page is all there is. If YouTube changes
 //            its markup this one goes blank before anything else does.
@@ -18,6 +19,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parseArgs } from 'node:util';
 import { parse as parseYaml } from 'yaml';
+import { spotify, spotifyKeys } from './lib/spotify.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const csvPath = path.join(root, 'stats', 'followers.csv');
@@ -29,7 +31,7 @@ const { values: opts, positionals: slugs } = parseArgs({
 });
 
 const env = process.env;
-const hasSpotify = env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET;
+const hasSpotify = spotifyKeys.app;
 const ua = { 'User-Agent': 'Mozilla/5.0 (mixtape-collective stats)', 'Accept-Language': 'en' };
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -58,30 +60,8 @@ async function deezerFans(id) {
   return data.fans;
 }
 
-let spotifyToken;
 async function spotifyFollowers(id) {
-  if (!spotifyToken) {
-    const res = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${env.SPOTIFY_CLIENT_ID}:${env.SPOTIFY_CLIENT_SECRET}`).toString('base64')}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(`Spotify login failed: ${data.error_description ?? data.error ?? res.status}`);
-    spotifyToken = data.access_token;
-  }
-  const res = await fetch(`https://api.spotify.com/v1/playlists/${id}?fields=followers(total)`, {
-    headers: { Authorization: `Bearer ${spotifyToken}` },
-  });
-  if (res.status === 429) {
-    await sleep((Number(res.headers.get('retry-after')) || 5) * 1000);
-    return spotifyFollowers(id);
-  }
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`Spotify ${res.status}: ${data.error?.message ?? 'no details'}`);
+  const data = await spotify(`/playlists/${id}?fields=followers(total)`);
   if (typeof data.followers?.total !== 'number') throw new Error('Spotify returned no follower count');
   return data.followers.total;
 }
