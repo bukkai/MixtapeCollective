@@ -1,0 +1,279 @@
+---
+// Private follower overview. Not linked anywhere, not indexed.
+// Open it as /stats?key=... The key lives in .secrets/.env as STATS_KEY, only its SHA-256 is here.
+// Run `printf %s "$NEW_KEY" | shasum -a 256` to swap it for a new one.
+//
+// This hides the page, it doesn't protect the numbers: stats/followers.csv is in the public repo.
+// The CSV is fetched live from GitHub, because the weekly stats commit doesn't redeploy the site.
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import { getCollection } from 'astro:content';
+import { palette } from '../data/palette';
+
+const keyHash = '361e52bf1d671372a36f091349c0d284e2ab1c9d2cca7a580c1b5e3c23a99431';
+const csvUrl = 'https://raw.githubusercontent.com/bukkai/MixtapeCollective/main/stats/followers.csv';
+
+const playlists = Object.fromEntries(
+  (await getCollection('playlists')).map((p) => [
+    p.id,
+    { title: p.data.title, color: palette[p.data.color].hex, status: p.data.status },
+  ]),
+);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="dark" />
+    <title>Stats</title>
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+  </head>
+  <body>
+    <main>
+      <p id="status" class="muted">Loading…</p>
+      <section id="stats" hidden>
+        <h1>Followers</h1>
+        <div class="controls">
+          <label>
+            Compare
+            <select id="to"></select>
+          </label>
+          <label>
+            with
+            <select id="from"></select>
+          </label>
+          <label class="check">
+            <input type="checkbox" id="changed" />
+            Only changes
+          </label>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Playlist</th>
+                <th class="num">Deezer <small>fans</small></th>
+                <th class="num">Spotify <small>followers</small></th>
+                <th class="num">YouTube <small>views</small></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script define:vars={{ keyHash, csvUrl, playlists }}>
+      const platforms = ['deezer', 'spotify', 'youtube'];
+      const $ = (s) => document.querySelector(s);
+      const status = $('#status');
+      const fmt = new Intl.NumberFormat('en');
+
+      async function sha256(text) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+        return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+      }
+
+      function el(tag, attrs = {}, ...children) {
+        const node = document.createElement(tag);
+        Object.assign(node, attrs);
+        node.append(...children);
+        return node;
+      }
+
+      // { date: { slug: { platform: count } } }
+      function parse(csv) {
+        const byDate = {};
+        for (const line of csv.trim().split('\n').slice(1)) {
+          const [date, slug, platform, , count] = line.split(',');
+          ((byDate[date] ??= {})[slug] ??= {})[platform] = Number(count);
+        }
+        return byDate;
+      }
+
+      function cell(now, then) {
+        const td = el('td', { className: 'num' });
+        if (now === undefined) {
+          td.append(el('span', { className: 'muted' }, '–'));
+          return td;
+        }
+        td.append(fmt.format(now));
+        const diff = then === undefined ? null : now - then;
+        const tag =
+          diff === null
+            ? el('span', { className: 'delta new' }, 'new')
+            : el('span', { className: `delta ${diff > 0 ? 'up' : diff < 0 ? 'down' : 'flat'}` },
+                diff === 0 ? '±0' : `${diff > 0 ? '+' : '−'}${fmt.format(Math.abs(diff))}`);
+        td.append(' ', tag);
+        return td;
+      }
+
+      function render(data) {
+        const to = $('#to').value;
+        const from = $('#from').value;
+        const onlyChanged = $('#changed').checked;
+        const now = data[to] ?? {};
+        const then = data[from] ?? {};
+
+        const rows = Object.keys(now).map((slug) => {
+          const diffs = platforms.map((p) => (now[slug][p] ?? 0) - (then[slug]?.[p] ?? now[slug][p] ?? 0));
+          return { slug, diffs, moved: diffs.reduce((a, b) => a + Math.abs(b), 0), isNew: !then[slug] };
+        });
+        rows.sort((a, b) => b.moved - a.moved || title(a.slug).localeCompare(title(b.slug)));
+
+        const tbody = $('tbody');
+        tbody.replaceChildren();
+        for (const { slug, moved, isNew } of rows) {
+          if (onlyChanged && !moved && !isNew) continue;
+          const info = playlists[slug];
+          const name = el('td', { className: 'name' },
+            el('span', { className: 'swatch', style: `background:${info?.color ?? '#555'}` }),
+            title(slug));
+          if (info && info.status !== 'published') name.append(' ', el('span', { className: 'muted' }, `(${info.status})`));
+          tbody.append(el('tr', moved ? { className: 'moved' } : {},
+            name, ...platforms.map((p) => cell(now[slug][p], then[slug]?.[p]))));
+        }
+        if (!tbody.children.length) {
+          tbody.append(el('tr', {}, el('td', { colSpan: 4, className: 'muted' }, 'Nothing moved.')));
+        }
+
+        // A platform that wasn't measured at all (Spotify before the keys were in) has no total, not 0
+        const sum = (snap, p) =>
+          Object.values(snap).some((s) => p in s)
+            ? Object.values(snap).reduce((a, s) => a + (s[p] ?? 0), 0)
+            : undefined;
+        $('tfoot').replaceChildren(el('tr', {}, el('td', {}, 'Total'),
+          ...platforms.map((p) => cell(sum(now, p), from ? sum(then, p) : undefined))));
+      }
+
+      function title(slug) {
+        return playlists[slug]?.title ?? slug;
+      }
+
+      async function main() {
+        const key = new URLSearchParams(location.search).get('key');
+        if (!key || (await sha256(key)) !== keyHash) {
+          status.textContent = 'Nothing here.';
+          return;
+        }
+        const res = await fetch(csvUrl, { cache: 'no-store' });
+        if (!res.ok) throw new Error(`GitHub returned ${res.status}`);
+        const data = parse(await res.text());
+        const dates = Object.keys(data).sort().reverse();
+        if (!dates.length) {
+          status.textContent = 'No snapshots yet.';
+          return;
+        }
+
+        for (const d of dates) $('#to').append(el('option', { value: d }, d));
+        for (const d of dates.slice(1)) $('#from').append(el('option', { value: d }, d));
+        if (dates.length < 2) $('#from').append(el('option', { value: '' }, '–'));
+        $('#to').value = dates[0];
+        $('#from').value = dates[1] ?? '';
+
+        for (const id of ['#to', '#from', '#changed']) $(id).addEventListener('change', () => render(data));
+        render(data);
+        status.hidden = true;
+        $('#stats').hidden = false;
+      }
+
+      main().catch((err) => {
+        status.textContent = `Couldn't load the stats: ${err.message}`;
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #16130f;
+    --text: #e9e1cd;
+    --muted: #a59b86;
+    --rule: rgba(233, 225, 205, 0.18);
+    --up: #9fd38a;
+    --down: #e98a7a;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    margin: 0;
+    font-family: var(--mono);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 16px 64px;
+  }
+  h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0 0 16px;
+  }
+  .muted { color: var(--muted); }
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+  }
+  select, input { font: inherit; }
+  select {
+    color: var(--text);
+    background: #221d17;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 4px 6px;
+    margin-left: 6px;
+  }
+  .check { display: flex; gap: 6px; align-items: center; }
+  .scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    font-variant-numeric: tabular-nums;
+  }
+  th, td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    white-space: nowrap;
+  }
+  th { font-weight: 600; vertical-align: bottom; }
+  th small { display: block; font-weight: 400; color: var(--muted); }
+  .num { text-align: right; }
+  .name { white-space: normal; min-width: 14ch; }
+  .swatch {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: baseline;
+  }
+  tr.moved td { background: rgba(233, 225, 205, 0.05); }
+  tfoot td { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--rule); }
+  .delta { display: inline-block; min-width: 5ch; font-size: 0.8rem; text-align: right; }
+  .delta.up { color: var(--up); }
+  .delta.down { color: var(--down); }
+  .delta.flat, .delta.new { color: var(--muted); }
+  @media (max-width: 600px) {
+    th, td { padding: 7px 6px; }
+    .name { min-width: 11ch; }
+    /* change under the number, so all three platforms fit on a phone */
+    .delta { display: block; min-width: 0; }
+  }
+</style>
