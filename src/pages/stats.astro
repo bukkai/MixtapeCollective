@@ -56,10 +56,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <table>
             <thead>
               <tr>
-                <th>Playlist</th>
-                <th class="num">Deezer <small>fans</small></th>
-                <th class="num">Spotify <small>followers</small></th>
-                <th class="num">YouTube <small>views</small></th>
+                <th data-sort="name"><button type="button">Playlist<span class="arrow" aria-hidden="true"></span></button></th>
+                <th class="num" data-sort="deezer"><button type="button">Deezer<span class="arrow" aria-hidden="true"></span><small>fans</small></button></th>
+                <th class="num" data-sort="spotify"><button type="button">Spotify<span class="arrow" aria-hidden="true"></span><small>followers</small></button></th>
+                <th class="num" data-sort="youtube"><button type="button">YouTube<span class="arrow" aria-hidden="true"></span><small>views</small></button></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -74,6 +74,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       const $ = (s) => document.querySelector(s);
       const status = $('#status');
       const fmt = new Intl.NumberFormat('en');
+      let sort = { by: 'moved', flip: false };
 
       async function sha256(text) {
         const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -125,7 +126,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           const diffs = platforms.map((p) => (now[slug][p] ?? 0) - (then[slug]?.[p] ?? now[slug][p] ?? 0));
           return { slug, diffs, moved: diffs.reduce((a, b) => a + Math.abs(b), 0), isNew: !then[slug] };
         });
-        rows.sort((a, b) => b.moved - a.moved || title(a.slug).localeCompare(title(b.slug)));
+        // Default: what moved most on top. A clicked column sorts by its current count,
+        // biggest first (names A to Z), a second click flips it.
+        const byName = (a, b) => title(a.slug).localeCompare(title(b.slug));
+        // Flipping only reverses the column itself, ties stay A to Z
+        const dir = sort.flip ? -1 : 1;
+        const compare = {
+          moved: (a, b) => dir * (b.moved - a.moved) || byName(a, b),
+          name: (a, b) => dir * byName(a, b),
+          ...Object.fromEntries(platforms.map((p, i) => [p, (a, b) =>
+            dir * ((now[b.slug][p] ?? -1) - (now[a.slug][p] ?? -1) || b.diffs[i] - a.diffs[i]) || byName(a, b)])),
+        }[sort.by];
+        rows.sort(compare);
+        for (const th of document.querySelectorAll('th[data-sort]')) {
+          const active = th.dataset.sort === sort.by;
+          const down = th.dataset.sort === 'name' ? sort.flip : !sort.flip;
+          if (active) th.setAttribute('aria-sort', down ? 'descending' : 'ascending');
+          else th.removeAttribute('aria-sort');
+          th.querySelector('.arrow').textContent = active ? (down ? ' ↓' : ' ↑') : '';
+        }
 
         const tbody = $('tbody');
         tbody.replaceChildren();
@@ -178,6 +197,13 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         $('#from').value = dates[1] ?? '';
 
         for (const id of ['#to', '#from', '#changed']) $(id).addEventListener('change', () => render(data));
+        for (const th of document.querySelectorAll('th[data-sort]')) {
+          th.querySelector('button').addEventListener('click', () => {
+            const by = th.dataset.sort;
+            sort = by === sort.by ? { by, flip: !sort.flip } : { by, flip: false };
+            render(data);
+          });
+        }
         render(data);
         status.hidden = true;
         $('#stats').hidden = false;
@@ -257,6 +283,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   th { font-weight: 600; vertical-align: bottom; }
   th small { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); }
   .num { text-align: right; }
+  th button {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    font-weight: 600;
+  }
+  th button:hover { text-decoration: underline dotted; text-underline-offset: 4px; }
+  th button:focus-visible { outline: 2px dashed var(--text); outline-offset: 3px; }
+  .arrow { color: var(--up); }
   .name { white-space: normal; min-width: 14ch; }
   .swatch {
     display: inline-block;
