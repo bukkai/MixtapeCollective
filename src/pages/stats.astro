@@ -196,8 +196,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     --text: #e9e1cd;
     --muted: #a59b86;
     --rule: rgba(233, 225, 205, 0.18);
-    --up: #9fd38a;
-    --down: #e98a7a;
+    --up: #b8f0a2;
+    --down: #ffa595;
+    --flat: #c9bfa8;
     --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
   }
   * { box-sizing: border-box; }
@@ -207,16 +208,17 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: var(--mono);
     color: var(--text);
     background: var(--bg);
+    font-size: 18px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
   main {
-    max-width: 900px;
+    max-width: 980px;
     margin: 0 auto;
     padding: 40px 16px 64px;
   }
   h1 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 0 0 16px;
   }
@@ -227,7 +229,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     gap: 10px 20px;
     align-items: center;
     margin-bottom: 20px;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   select, input { font: inherit; }
   select {
@@ -243,7 +245,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-variant-numeric: tabular-nums;
   }
   th, td {
@@ -253,7 +255,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     white-space: nowrap;
   }
   th { font-weight: 600; vertical-align: bottom; }
-  th small { display: block; font-weight: 400; color: var(--muted); }
+  th small { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); }
   .num { text-align: right; }
   .name { white-space: normal; min-width: 14ch; }
   .swatch {
@@ -266,12 +268,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   tr.moved td { background: rgba(233, 225, 205, 0.05); }
   tfoot td { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--rule); }
-  .delta { display: inline-block; min-width: 5ch; font-size: 0.8rem; text-align: right; }
+  .delta { display: inline-block; min-width: 5ch; font-size: 0.9rem; font-weight: 600; text-align: right; }
   .delta.up { color: var(--up); }
   .delta.down { color: var(--down); }
-  .delta.flat, .delta.new { color: var(--muted); }
+  .delta.flat, .delta.new { color: var(--flat); font-weight: 400; }
   @media (max-width: 600px) {
-    th, td { padding: 7px 6px; }
+    body { font-size: 16px; }
+    th, td { padding: 8px 4px; }
+    th:first-child, td:first-child { padding-left: 0; }
     .name { min-width: 11ch; }
     /* change under the number, so all three platforms fit on a phone */
     .delta { display: block; min-width: 0; }
