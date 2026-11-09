@@ -68,13 +68,19 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
         />
       </div>
       <div class="filters">
-        <ul class="chips" aria-label="Filter by color">
+        <button type="button" class="color-toggle" aria-expanded="false" aria-controls="color-list">
+          <span class="swatch" aria-hidden="true" hidden></span>
+          <span class="color-toggle-label">All colors</span>
+          <span class="caret" aria-hidden="true"></span>
+        </button>
+        <ul class="chips" id="color-list" aria-label="Filter by color">
           {usedColors.map((k) => (
             <li>
               <button
                 type="button"
                 class="chip"
                 data-color={k}
+                data-label={palette[k].use}
                 aria-pressed="false"
                 style={`--swatch:${palette[k].deezer}`}
               >
@@ -122,6 +128,10 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
       const input = document.querySelector<HTMLInputElement>('#q')!;
       const statusText = document.querySelector('.status-text')!;
       const clear = document.querySelector<HTMLButtonElement>('.clear')!;
+      const filters = document.querySelector<HTMLElement>('.filters')!;
+      const toggle = document.querySelector<HTMLButtonElement>('.color-toggle')!;
+      const toggleSwatch = toggle.querySelector<HTMLElement>('.swatch')!;
+      const toggleLabel = toggle.querySelector<HTMLElement>('.color-toggle-label')!;
 
       // Same folding as src/data/tracklists.ts, so "altin gun" finds Altın Gün
       const fold = (s: string) =>
@@ -182,6 +192,11 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
             : `Nothing on the shelf for that yet.`;
         clear.hidden = !active;
 
+        const picked = chips.find((c) => c.dataset.color === color);
+        toggleSwatch.hidden = !picked;
+        if (picked) toggleSwatch.style.setProperty('--swatch', picked.style.getPropertyValue('--swatch'));
+        toggleLabel.textContent = picked ? picked.dataset.label! : 'All colors';
+
         const url = new URL(location.href);
         if (q) url.searchParams.set('q', input.value.trim());
         else url.searchParams.delete('q');
@@ -199,8 +214,25 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
         c.addEventListener('click', () => {
           color = color === c.dataset.color ? null : c.dataset.color!;
           apply();
+          setOpen(false);
         });
       }
+
+      // Phone dropdown for the color chips
+      function setOpen(open: boolean) {
+        filters.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+      }
+      toggle.addEventListener('click', () => setOpen(!filters.classList.contains('open')));
+      document.addEventListener('click', (e) => {
+        if (!filters.contains(e.target as Node)) setOpen(false);
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && filters.classList.contains('open')) {
+          setOpen(false);
+          toggle.focus();
+        }
+      });
       clear.addEventListener('click', () => {
         color = null;
         q = '';
@@ -400,17 +432,66 @@ const ogImage = Astro.site ? new URL(`${base}/og.png`, Astro.site).href : `${bas
   }
   .chip[aria-pressed='true'] .n { color: #5d574c; }
 
-  /* Phones: one row you swipe through, so the tapes aren't pushed a screen down */
+  .filters { position: relative; }
+  .color-toggle { display: none; }
+
+  /* Phones: a dropdown, so the tapes aren't pushed a screen down */
   @media (max-width: 640px) {
-    .chips {
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      margin: 0 -16px;
-      padding: 6px 16px 10px;
-      scrollbar-width: none;
+    .color-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 520px;
+      font: inherit;
+      font-size: 0.85rem;
+      color: var(--text);
+      background: rgba(233, 225, 205, 0.04);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
     }
-    .chips::-webkit-scrollbar { display: none; }
-    .chip { white-space: nowrap; }
+    .color-toggle-label { flex: 1; }
+    .caret {
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid var(--muted);
+      border-bottom: 2px solid var(--muted);
+      transform: translateY(-2px) rotate(45deg);
+      transition: transform 0.15s ease;
+    }
+    .color-toggle[aria-expanded='true'] .caret { transform: translateY(2px) rotate(-135deg); }
+
+    .chips {
+      display: none;
+      position: absolute;
+      z-index: 10;
+      left: 0;
+      right: 0;
+      max-width: 520px;
+      max-height: 60vh;
+      overflow-y: auto;
+      margin-top: 6px;
+      padding: 6px;
+      flex-direction: column;
+      gap: 2px;
+      background: #201b15;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      box-shadow: 0 18px 36px -12px rgba(0, 0, 0, 0.95);
+    }
+    .filters.open .chips { display: flex; }
+    .chip {
+      width: 100%;
+      font-size: 0.85rem;
+      padding: 10px 10px;
+      border-color: transparent;
+      background: none;
+    }
+    .chip .n { margin-left: auto; }
+    .chip[aria-pressed='true'] { transform: none; }
   }
 
   .status {
